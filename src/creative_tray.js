@@ -1,0 +1,397 @@
+import {
+  SortableContainer,
+  SortableElement,
+  arrayMove
+} from "react-sortable-hoc";
+import React from "react";
+import { Slider, DatePicker, Button } from "antd";
+import moment from "moment";
+import { CreativeCard } from "./creative_card";
+
+const dateFormat = "MM/DD/YYYY";
+const creativeTrayPadding = 60;
+
+const SortableItem = SortableElement(
+  ({ value, onRemove, reachMax, onDuplicate, removeDuplicate, items }) => (
+    <div
+      style={{
+        position: "relative",
+        backgroundColor: "lightgray",
+        width: 240,
+        height: 252,
+        zIndex: 100,
+        margin:
+          0.5 * creativeTrayPadding + "px 0 " + creativeTrayPadding + "px 0"
+      }}
+    >
+      <a>
+        <Button
+          onClick={e => {
+            console.log("click a");
+            if (items.filter(item => item === value).length > 1) {
+              removeDuplicate(value);
+            } else {
+              onRemove(value);
+            }
+          }}
+          icon="close"
+          style={{
+            position: "absolute",
+            right: -0,
+            top: -40,
+            zIndex: 10,
+            border: "0px solid",
+            backgroundColor: "rgba(0,0,0,0)"
+          }}
+        />
+      </a>
+      {!reachMax && (
+        <a>
+          <Button
+            onClick={() => {
+              onDuplicate(value);
+            }}
+            icon="copy"
+            style={{
+              position: "absolute",
+              right: 20,
+              top: -40,
+              zIndex: 10,
+              border: "0px solid",
+              backgroundColor: "rgba(0,0,0,0)"
+            }}
+          />
+        </a>
+      )}
+      <CreativeCard item={value} />
+    </div>
+  )
+);
+
+const SortableList = SortableContainer(
+  ({ items, onRemove, reachMax, onDuplicate, removeDuplicate }) => {
+    return (
+      <div>
+        {items.map((value, index) => (
+          <SortableItem
+            key={`item-${index}`}
+            index={index}
+            value={value}
+            onRemove={onRemove}
+            reachMax={reachMax}
+            onDuplicate={onDuplicate}
+            removeDuplicate={removeDuplicate}
+            items={items}
+          />
+        ))}
+      </div>
+    );
+  }
+);
+
+const creativePlaceHolder = num => {
+  let text = "creative";
+  if (num === 1) text = "1 st creative";
+  if (num === 2) text = "2nd creative";
+  if (num === 3) text = "3rd creative(optional)";
+  return (
+    <div
+      style={{
+        border: "1px dashed lightgray",
+        width: 240,
+        height: 252,
+        margin:
+          0.5 * creativeTrayPadding + "px 0 " + creativeTrayPadding + "px 0",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "rgba(0,0,0,0.45)"
+      }}
+    >
+      {text}
+    </div>
+  );
+};
+
+const startDate = moment()
+  .startOf("month")
+  .format("L");
+const endDate = moment()
+  .endOf("month")
+  .format("L");
+const dur = moment
+  .duration({ from: moment(startDate), to: new Date() })
+  .asDays();
+const progress =
+  100 *
+  (1 -
+    dur /
+      moment
+        .duration({ from: moment(startDate), to: moment(endDate) })
+        .asDays());
+
+export class CreativeTray extends React.Component {
+  state = {
+    items: this.props.items || []
+  };
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.items !== this.props.items) {
+      this.setState({ items: nextProps.items });
+    }
+    if (this.state.items.length !== nextState.items.length) {
+      this.props.onUpateSelectedNum(nextState.items);
+    }
+  }
+
+  onSortEnd = ({ oldIndex, newIndex }) => {
+    this.setState({
+      items: arrayMove(this.state.items, oldIndex, newIndex)
+    });
+  };
+
+  onDuplicate = item => {
+    this.setState({ items: this.state.items.concat([item]) });
+  };
+
+  removeDuplicate = item => {
+    let tempItems = this.state.items.slice(0);
+    tempItems.splice(this.state.items.findIndex(i => i === item), 1);
+    this.setState({ items: tempItems });
+  };
+
+  render() {
+    //console.log(progress);
+    const maxSelection = 3;
+    const reachMax = this.state.items.length >= maxSelection;
+
+    let marks = {};
+    let values = [];
+    if (this.state.items.length <= 1) {
+      if (this.props.distribution >= 2) {
+        values = [32.5, 100];
+        marks = {
+          0: "",
+          32.5: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {endDate} <span className="start-end-label">FLIGHT END</span>
+            </div>
+          ),
+          66: {
+            style: { marginBottom: "-50%" },
+            label: (
+              <DatePicker
+                size="small"
+                defaultValue={moment(startDate, dateFormat).add(15, "days")}
+                format={dateFormat}
+                style={{ width: 140, zIndex: 1 }}
+              />
+            )
+          },
+          100: {
+            label: (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {startDate}{" "}
+                <span className="start-end-label">FLIGHT START</span>
+              </div>
+            )
+          }
+        };
+      } else {
+        values = [33, 100];
+        marks = {
+          0: "",
+          32.5: "",
+          66: {
+            label: (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {endDate} <span className="start-end-label">FLIGHT END</span>
+              </div>
+            )
+          },
+          100: {
+            label: (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {startDate}{" "}
+                <span className="start-end-label">FLIGHT START</span>
+              </div>
+            )
+          }
+        };
+      }
+    } else if (this.state.items.length === 2) {
+      values = [32.5, 100];
+      marks = {
+        0: "",
+        32.5: (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {endDate} <span className="start-end-label">FLIGHT END</span>
+          </div>
+        ),
+        66: {
+          style: { marginBottom: "-50%" },
+          label: (
+            <DatePicker
+              size="small"
+              defaultValue={moment(startDate, dateFormat).add(15, "days")}
+              format={dateFormat}
+              style={{ width: 140, zIndex: 1 }}
+            />
+          )
+        },
+        100: {
+          label: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {startDate} <span className="start-end-label">FLIGHT START</span>
+            </div>
+          )
+        }
+      };
+    } else if (this.state.items.length === 3) {
+      values = [0, 100];
+      marks = {
+        0: (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {endDate} <span className="start-end-label">FLIGHT END</span>
+          </div>
+        ),
+        32.5: {
+          style: { marginBottom: "-50%" },
+          label: (
+            <DatePicker
+              size="small"
+              defaultValue={moment(startDate, dateFormat).add(20, "days")}
+              format={dateFormat}
+              style={{ width: 140, zIndex: 1 }}
+            />
+          )
+        },
+        66: {
+          style: { marginBottom: "-50%" },
+          label: (
+            <DatePicker
+              size="small"
+              defaultValue={moment(startDate, dateFormat).add(0, "days")}
+              format={dateFormat}
+              style={{ width: 140, zIndex: 1 }}
+            />
+          )
+        },
+        100: {
+          label: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {startDate} <span className="start-end-label">FLIGHT START</span>
+            </div>
+          )
+        }
+      };
+    }
+
+    let sliderHeight = (252 + creativeTrayPadding) * 3;
+    if (this.props.distribution === 1) {
+      sliderHeight = 252 + creativeTrayPadding;
+      values = [0, 100];
+      marks = {
+        0: (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {endDate} <span className="start-end-label">FLIGHT END</span>
+          </div>
+        ),
+        100: {
+          label: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {startDate} <span className="start-end-label">FLIGHT START</span>
+            </div>
+          )
+        }
+      };
+    }
+
+    if (this.props.distribution === 3) {
+      if (this.state.items.length <= 2) {
+        values = [33.4, 100];
+        marks = {
+          32.5: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {endDate} <span className="start-end-label">FLIGHT END</span>
+            </div>
+          ),
+          100: {
+            label: (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {startDate}{" "}
+                <span className="start-end-label">FLIGHT START</span>
+              </div>
+            )
+          }
+        };
+      } else {
+        values = [0, 100];
+        marks = {
+          0: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {endDate} <span className="start-end-label">FLIGHT END</span>
+            </div>
+          ),
+          100: {
+            label: (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {startDate}{" "}
+                <span className="start-end-label">FLIGHT START</span>
+              </div>
+            )
+          }
+        };
+      }
+    }
+    return (
+      <div style={{ display: "flex", margin: "24px 0 24px 0" }}>
+        <div style={{ height: sliderHeight }}>
+          <Slider
+            tipFormatter={value => {
+              if (value !== 100) {
+                return "Today";
+              } else {
+                return null;
+              }
+            }}
+            vertical
+            range
+            marks={marks}
+            value={values}
+          />
+        </div>
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              top: 0
+              //zIndex: -1
+            }}
+          >
+            {creativePlaceHolder()}
+            {this.state.items.map((item, index) => {
+              if (this.state.items.length === 0) {
+              } else if (this.state.items.length < 3) {
+                if (index >= 0) {
+                  return creativePlaceHolder(index + 2);
+                }
+              }
+            })}
+          </div>
+          <SortableList
+            items={this.state.items}
+            onSortEnd={this.onSortEnd}
+            lockAxis={"y"}
+            onRemove={this.props.onRemoveSelectedItem}
+            onDuplicate={this.onDuplicate}
+            removeDuplicate={this.removeDuplicate}
+            reachMax={reachMax}
+          />
+        </div>
+      </div>
+    );
+  }
+}

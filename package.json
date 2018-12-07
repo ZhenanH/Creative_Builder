@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "ant-design-pro": "2.1.1",
+    "antd": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-sortable-hoc": "0.8.4"
+  },
+  "name": "xpy8985y8w",
+  "description": null,
+  "version": "0.0.127",
+  "devDependencies": {
+    "react-scripts": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

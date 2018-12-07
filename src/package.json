@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "ant-design-pro": "2.1.1",
+    "antd": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-sortable-hoc": "0.8.4"
+  }
+}
