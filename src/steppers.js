@@ -2,12 +2,15 @@ import React from "react";
 import { Steps, Button, message, Icon } from "antd";
 import { CreativeManager } from "./creative_manager";
 import { StrategyManager } from "./strategy_manager";
+import { Summary } from "./set_summary";
 const Step = Steps.Step;
 
 export class Steppers extends React.Component {
   state = {
-    current: 1,
-    hasDynamicOffer: true
+    current: 0,
+    hasDynamicOffer: true,
+    selectedItems: [],
+    selectedStrategy: null
   };
 
   onOfferTypeSelect = value => {
@@ -35,6 +38,12 @@ export class Steppers extends React.Component {
     });
   }
 
+  onUpdateStrategy = strategy => {
+    this.setState({ selectedStrategy: strategy });
+  };
+  onUpdateSelectedCreative = items => {
+    this.setState({ selectedItems: items });
+  };
   render() {
     const { current } = this.state;
     const steps = [
@@ -42,7 +51,12 @@ export class Steppers extends React.Component {
         title: (
           <span onClick={() => this.setState({ current: 0 })}>Strategy</span>
         ),
-        content: <StrategyManager />,
+        content: (
+          <StrategyManager
+            onUpdateStrategy={this.onUpdateStrategy}
+            selectedStrategy={this.state.selectedStrategy}
+          />
+        ),
         status: "wait"
       },
       {
@@ -51,7 +65,11 @@ export class Steppers extends React.Component {
         ),
         content: (
           <div>
-            <CreativeManager onOfferTypeSelect={this.onOfferTypeSelect} />
+            <CreativeManager
+              onOfferTypeSelect={this.onOfferTypeSelect}
+              onUpdateSelectedCreative={this.onUpdateSelectedCreative}
+              selectedItems={this.state.selectedItems}
+            />
           </div>
         ),
         status: "wait"
@@ -75,25 +93,82 @@ export class Steppers extends React.Component {
         title: (
           <span onClick={() => this.setState({ current: 3 })}>Summary</span>
         ),
-        content: <div />,
+        content: (
+          <Summary
+            selectedItems={this.state.selectedItems}
+            selectedStrategy={this.state.selectedStrategy}
+          />
+        ),
         status: "wait"
       }
     ];
     return (
-      <div>
+      <div style={{ position: "relative" }}>
         <Steps
+          initial={-4}
           current={current}
           style={{
             backgroundColor: "#fafafa",
             padding: "16px 48px 16px 48px",
-            borderBottom: "1px solid #e8e8e8"
+            borderBottom: "1px solid #e8e8e8",
+            position: "relative"
           }}
         >
+          <div
+            className="step-block"
+            onClick={() => this.setState({ current: 0 })}
+            style={{
+              height: 64,
+              width: "25%",
+              position: "absolute",
+              top: 0,
+              left: 0
+            }}
+          />
+          <div
+            className="step-block"
+            onClick={() => this.setState({ current: 1 })}
+            style={{
+              height: 64,
+              width: "25%",
+              position: "absolute",
+              top: 0,
+              left: "25%"
+            }}
+          />
+          <div
+            className="step-block"
+            onClick={
+              this.state.hasDynamicOffer
+                ? () => this.setState({ current: 2 })
+                : null
+            }
+            style={{
+              height: 64,
+              width: "25%",
+              position: "absolute",
+              top: 0,
+              left: "50%"
+            }}
+          />
+          <div
+            className="step-block"
+            onClick={() => this.setState({ current: 3 })}
+            style={{
+              height: 64,
+              width: "25%",
+              position: "absolute",
+              top: 0,
+              left: "75%"
+            }}
+          />
+
           {steps.map((item, index) => (
             <Step
-              key={item.title + index}
+              key={index}
               title={item.title}
               status={index === this.state.current ? "process" : item.status}
+              style={{ pointerEvents: "none" }}
               icon={
                 item.status === "finish" ? (
                   <div

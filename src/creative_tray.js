@@ -122,17 +122,22 @@ const endDate = moment()
 const dur = moment
   .duration({ from: moment(startDate), to: new Date() })
   .asDays();
-const progress =
-  100 *
-  (1 -
-    dur /
-      moment
-        .duration({ from: moment(startDate), to: moment(endDate) })
-        .asDays());
 
+const getProgress = date => {
+  return Math.round(
+    100 *
+      (1 -
+        moment.duration({ from: moment(startDate), to: date }).asDays() /
+          moment
+            .duration({ from: moment(startDate), to: moment(endDate) })
+            .asDays())
+  );
+};
 export class CreativeTray extends React.Component {
   state = {
-    items: this.props.items || []
+    items: this.props.items || [],
+    creative2date: moment(startDate, dateFormat).add(15, "days"),
+    creative3date: moment(startDate, dateFormat).add(20, "days")
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -161,36 +166,53 @@ export class CreativeTray extends React.Component {
   };
 
   render() {
-    //console.log(progress);
+    let progress = Math.round(
+      100 *
+        (1 -
+          dur /
+            moment
+              .duration({ from: moment(startDate), to: moment(endDate) })
+              .asDays())
+    );
+
+    if (this.props.distribution === 2) {
+      if (this.state.items.length === 2) {
+        if (moment().isAfter(this.state.creative2date)) {
+          progress = 2.5;
+        } else {
+          progress = 52.5;
+        }
+      }
+      if (this.state.items.length === 3) {
+        if (moment().isAfter(this.state.creative3date)) {
+          progress = 2.5;
+        } else if (moment().isAfter(this.state.creative2date)) {
+          progress = 35.5;
+        } else {
+          progress = 68.5;
+        }
+      }
+    }
+
     const maxSelection = 3;
     const reachMax = this.state.items.length >= maxSelection;
-
+    let sliderHeight = (252 + creativeTrayPadding) * this.state.items.length;
     let marks = {};
     let values = [];
     if (this.state.items.length <= 1) {
       if (this.props.distribution >= 2) {
-        values = [32.5, 100];
+        values = [progress, 100];
         marks = {
           0: "",
-          32.5: (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {endDate} <span className="start-end-label">FLIGHT END</span>
-            </div>
-          ),
-          66: {
-            style: { marginBottom: "-50%" },
-            label: (
-              <DatePicker
-                size="small"
-                defaultValue={moment(startDate, dateFormat).add(15, "days")}
-                format={dateFormat}
-                style={{ width: 140, zIndex: 1 }}
-              />
-            )
-          },
           100: {
             label: (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: 16
+                }}
+              >
                 {startDate}{" "}
                 <span className="start-end-label">FLIGHT START</span>
               </div>
@@ -198,20 +220,18 @@ export class CreativeTray extends React.Component {
           }
         };
       } else {
-        values = [33, 100];
+        values = [progress, 100];
         marks = {
           0: "",
-          32.5: "",
-          66: {
-            label: (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {endDate} <span className="start-end-label">FLIGHT END</span>
-              </div>
-            )
-          },
           100: {
             label: (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: 16
+                }}
+              >
                 {startDate}{" "}
                 <span className="start-end-label">FLIGHT START</span>
               </div>
@@ -220,66 +240,91 @@ export class CreativeTray extends React.Component {
         };
       }
     } else if (this.state.items.length === 2) {
-      values = [32.5, 100];
+      values = [progress, 100];
       marks = {
-        0: "",
-        32.5: (
-          <div style={{ display: "flex", alignItems: "center" }}>
+        0: (
+          <div
+            style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+          >
             {endDate} <span className="start-end-label">FLIGHT END</span>
           </div>
         ),
-        66: {
+        49.5: {
           style: { marginBottom: "-50%" },
           label: (
             <DatePicker
               size="small"
-              defaultValue={moment(startDate, dateFormat).add(15, "days")}
+              value={this.state.creative2date}
               format={dateFormat}
-              style={{ width: 140, zIndex: 1 }}
+              style={{ width: 140, zIndex: 1, marginLeft: 16 }}
+              disabledDate={current =>
+                current && current < moment().endOf("day")
+              }
+              onChange={value => {
+                this.setState({ creative2date: value });
+              }}
             />
           )
         },
         100: {
           label: (
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+            >
               {startDate} <span className="start-end-label">FLIGHT START</span>
             </div>
           )
         }
       };
     } else if (this.state.items.length === 3) {
-      values = [0, 100];
+      values = [progress, 100];
       marks = {
         0: (
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+          >
             {endDate} <span className="start-end-label">FLIGHT END</span>
           </div>
         ),
-        32.5: {
+        33: {
           style: { marginBottom: "-50%" },
           label: (
             <DatePicker
               size="small"
-              defaultValue={moment(startDate, dateFormat).add(20, "days")}
+              value={this.state.creative3date}
               format={dateFormat}
-              style={{ width: 140, zIndex: 1 }}
+              style={{ width: 140, zIndex: 1, marginLeft: 16 }}
+              disabledDate={current =>
+                current && current < this.state.creative2date.endOf("day")
+              }
+              onChange={value => {
+                this.setState({ creative3date: value });
+              }}
             />
           )
         },
-        66: {
+        66.5: {
           style: { marginBottom: "-50%" },
           label: (
             <DatePicker
               size="small"
-              defaultValue={moment(startDate, dateFormat).add(0, "days")}
+              value={this.state.creative2date}
               format={dateFormat}
-              style={{ width: 140, zIndex: 1 }}
+              style={{ width: 140, zIndex: 1, marginLeft: 16 }}
+              disabledDate={current =>
+                current && current < moment().endOf("day")
+              }
+              onChange={value => {
+                this.setState({ creative2date: value });
+              }}
             />
           )
         },
         100: {
           label: (
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+            >
               {startDate} <span className="start-end-label">FLIGHT START</span>
             </div>
           )
@@ -287,19 +332,22 @@ export class CreativeTray extends React.Component {
       };
     }
 
-    let sliderHeight = (252 + creativeTrayPadding) * 3;
     if (this.props.distribution === 1) {
       sliderHeight = 252 + creativeTrayPadding;
-      values = [0, 100];
+      values = [progress, 100];
       marks = {
         0: (
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+          >
             {endDate} <span className="start-end-label">FLIGHT END</span>
           </div>
         ),
         100: {
           label: (
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+            >
               {startDate} <span className="start-end-label">FLIGHT START</span>
             </div>
           )
@@ -309,16 +357,24 @@ export class CreativeTray extends React.Component {
 
     if (this.props.distribution === 3) {
       if (this.state.items.length <= 2) {
-        values = [33.4, 100];
+        values = [progress, 100];
         marks = {
-          32.5: (
-            <div style={{ display: "flex", alignItems: "center" }}>
+          0: (
+            <div
+              style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+            >
               {endDate} <span className="start-end-label">FLIGHT END</span>
             </div>
           ),
           100: {
             label: (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: 16
+                }}
+              >
                 {startDate}{" "}
                 <span className="start-end-label">FLIGHT START</span>
               </div>
@@ -326,16 +382,24 @@ export class CreativeTray extends React.Component {
           }
         };
       } else {
-        values = [0, 100];
+        values = [progress, 100];
         marks = {
           0: (
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
+            >
               {endDate} <span className="start-end-label">FLIGHT END</span>
             </div>
           ),
           100: {
             label: (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: 16
+                }}
+              >
                 {startDate}{" "}
                 <span className="start-end-label">FLIGHT START</span>
               </div>
@@ -345,12 +409,16 @@ export class CreativeTray extends React.Component {
       }
     }
     return (
-      <div style={{ display: "flex", margin: "24px 0 24px 0" }}>
+      <div style={{ display: "flex", margin: "34px 0 24px 0" }}>
         <div style={{ height: sliderHeight }}>
           <Slider
             tipFormatter={value => {
               if (value !== 100) {
-                return "Today";
+                return (
+                  <span style={{ fontSize: 12 }}>
+                    Today: {moment().format(dateFormat)}
+                  </span>
+                );
               } else {
                 return null;
               }
@@ -361,7 +429,7 @@ export class CreativeTray extends React.Component {
             value={values}
           />
         </div>
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", left: 12 }}>
           <div
             style={{
               position: "absolute",

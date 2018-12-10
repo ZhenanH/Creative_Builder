@@ -10,11 +10,12 @@ import {
   Tooltip,
   Icon,
   Input,
-  Switch
+  Switch,
+  Spin
 } from "antd";
 import { CreativeTray } from "./creative_tray";
 import { CreativeGrid } from "./creative_grid";
-
+import { CreativeBuilder } from "./creative_builder.js";
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -23,28 +24,48 @@ const Option = Select.Option;
 
 export class CreativeManager extends React.Component {
   state = {
-    selectedItems: [],
+    pageSize: 30,
+    selectedItems: this.props.selectedItems || [],
     distribution: 1,
     imgs: [],
-    value: true
+    value: true,
+    productType: 2
   };
 
   componentDidMount() {
+    this.updateFetch(this.state.pageSize);
+  }
+
+  updateFetch = pageSize => {
     fetch(
-      "https://api.unsplash.com/search/photos/?page=1&per_page=12&query=christmas&client_id=" +
+      "https://api.unsplash.com/search/photos/?page=1&per_page=" +
+        pageSize +
+        "&query=christmas&client_id=" +
         "b999119b619805e445c4bddf0d3d8cbf8f1c922a579afbef57a285cbd4113038"
     )
       .then(res => res.json())
       .then(data => {
-        this.setState({ imgs: data.results });
+        this.setState({
+          imgs: data.results.map(item => {
+            item.panels = item.likes % 2 === 0 ? 2 : 4;
+            return item;
+          }),
+          loading: false
+        });
       })
       .catch(err => {
         console.log("Error happened during fetching!", err);
       });
-  }
+  };
+
+  // onPageSizeChange = (currnt, pageSize) => {
+  //   this.setState({ pageSize: pageSize, loading: true });
+  //   this.updateFetch(pageSize);
+  // };
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.selectedItems !== this.state.selectedItems) {
+      this.props.onUpdateSelectedCreative(nextState.selectedItems);
       if (
         nextState.selectedItems.length === 0 ||
         nextState.selectedItems.length === 1
@@ -59,11 +80,12 @@ export class CreativeManager extends React.Component {
     }
   }
   onSelectCreative = (item, selected) => {
+    //console.log(item, selected);
     if (selected) {
       this.setState({ selectedItems: this.state.selectedItems.concat([item]) });
-    } else {
+    } else if (item) {
       this.setState({
-        selectedItems: this.state.selectedItems.filter(i => i !== item)
+        selectedItems: this.state.selectedItems.filter(i => i.id !== item.id)
       });
     }
   };
@@ -94,6 +116,9 @@ export class CreativeManager extends React.Component {
     this.setState({ customeAddressee: e });
   };
 
+  handleProductChange = productType => {
+    this.setState({ productType });
+  };
   render() {
     const radioStyle = {
       //display: "block",
@@ -114,13 +139,13 @@ export class CreativeManager extends React.Component {
           <Col span={6}>
             <FormItem label="Product Type">
               <Select
-                defaultValue="jack"
+                value={this.state.productType}
                 style={{ width: "100%" }}
-                onChange={this.handleChange}
+                onChange={this.handleProductChange}
               >
-                <Option value="jack">Postcard</Option>
-                <Option value="lucy">4 panel catalog</Option>
-                <Option value="Yiminghe">8 panel catalog</Option>
+                <Option value={2}>Postcard</Option>
+                <Option value={4}>4 panel catalog</Option>
+                <Option value={8}>8 panel catalog</Option>
               </Select>
             </FormItem>
           </Col>
@@ -278,17 +303,25 @@ export class CreativeManager extends React.Component {
                   onUpateSelectedNum={this.onUpateSelectedNum}
                 />
               </div>
-
-              <CreativeGrid
-                selectedItems={this.state.selectedItems}
-                onSelectCreative={this.onSelectCreative}
-                distribution={this.state.distribution}
-                items={this.state.imgs}
-              />
+              <Spin
+                spinning={this.state.loading}
+                wrapperClassName="spin-container"
+              >
+                <CreativeGrid
+                  selectedItems={this.state.selectedItems}
+                  onSelectCreative={this.onSelectCreative}
+                  distribution={this.state.distribution}
+                  items={this.state.imgs.filter(
+                    item => item.panels === this.state.productType
+                  )}
+                  total={this.state.pageSize}
+                  pageSize={this.state.pageSize}
+                />
+              </Spin>
             </div>
           </TabPane>
           <TabPane tab="Create New Creative" key="2">
-            Content of Tab Pane 2
+            <CreativeBuilder/>
           </TabPane>
         </Tabs>
       </div>

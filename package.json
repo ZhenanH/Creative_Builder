@@ -2,7 +2,10 @@
   "dependencies": {
     "ant-design-pro": "2.1.1",
     "antd": "latest",
+    "filestack-js": "1.8.2",
+    "filestack-react": "2.0.0",
     "react": "latest",
+    "react-absolute-grid": "3.0.1",
     "react-dom": "latest",
     "react-sortable-hoc": "0.8.4"
   },

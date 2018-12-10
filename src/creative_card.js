@@ -7,14 +7,19 @@ const { Meta } = Card;
 export class CreativeCard extends React.Component {
   state = {
     isSelected: this.props.selectedItems
-      ? this.props.selectedItems.indexOf(this.props.item) >= 0
+      ? this.props.selectedItems.find(
+          item => item.id === this.props.item.id
+        ) !== undefined
       : false
   };
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.selectedItems !== this.props.selectedItems) {
       this.setState({
-        isSelected: nextProps.selectedItems.indexOf(this.props.item) >= 0
+        isSelected:
+          nextProps.selectedItems.find(
+            item => item.id === this.props.item.id
+          ) !== undefined
       });
     }
   }
@@ -30,6 +35,7 @@ export class CreativeCard extends React.Component {
       }
       this.setState({ isSelected: !this.state.isSelected });
       if (this.props.onSelectCreative) {
+        //console.log(reachMax, this.state.isSelected, this.props.onSelectCreative)
         this.props.onSelectCreative(this.props.item, !this.state.isSelected);
       }
     };
@@ -87,7 +93,7 @@ export class CreativeCard extends React.Component {
             }
             description={
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ flex: 1 }}>2 Panels</div>
+                <div style={{ flex: 1 }}>{this.props.item.panels} Panels</div>
                 <Icon
                   style={{ flex: 1, color: "#52c41a" }}
                   type="clock-circle"

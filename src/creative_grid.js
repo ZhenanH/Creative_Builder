@@ -1,6 +1,6 @@
 import React from "react";
 import { CreativeCard } from "./creative_card";
-import { Input, Table, Icon } from "antd";
+import { Input, Table, Icon, Pagination } from "antd";
 
 const Search = Input.Search;
 
@@ -94,13 +94,23 @@ const arr_diff = (a1, a2) => {
 export class CreativeGrid extends React.Component {
   state = {
     layout: "grid",
-    selectedRowKeys: []
+    selectedRowKeys: this.props.selectedItems.map(item => item.id),
+    pageSize: 12,
+    current: 1
   };
 
+  onPageSizeChange = (current, pageSize) => {
+    this.setState({ pageSize: pageSize, current: current });
+  };
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.selectedItems !== this.props.selectedItems) {
       this.setState({
         selectedRowKeys: nextProps.selectedItems.map(item => item.id)
+      });
+    }
+    if (nextProps.items !== this.props.items) {
+      this.setState({
+        items: nextProps.items
       });
     }
   }
@@ -122,13 +132,16 @@ export class CreativeGrid extends React.Component {
     if (selectedRowKeys.indexOf(record.key) >= 0) {
       selectedRowKeys.splice(selectedRowKeys.indexOf(record.key), 1);
     } else {
-      selectedRowKeys.push(record.key);
+      if (this.props.selectedItems.length < 3) {
+        selectedRowKeys.push(record.key);
+      }
     }
     this.setState({ selectedRowKeys });
     const selectedItemKey = arr_diff(
       this.state.selectedRowKeys,
       selectedRowKeys
     )[0];
+
     this.props.onSelectCreative(
       this.props.items.filter(item => item.id === selectedItemKey)[0],
       this.state.selectedRowKeys.length < selectedRowKeys.length
@@ -136,6 +149,7 @@ export class CreativeGrid extends React.Component {
   };
 
   render() {
+    //console.log("grid",this.props);
     const items = this.props.items || [
       "item1",
       "item2",
@@ -183,26 +197,27 @@ export class CreativeGrid extends React.Component {
     };
 
     return (
-      <div style={{ margin: "6px 12px 12px 12px", width: "100%" }}>
+      <div style={{ margin: "12px 12px 12px 12px" }}>
         <div
           style={{
             display: "flex",
             width: "100%",
             alignItems: "center",
-            marginBottom: 40
+            marginBottom: 15
           }}
         >
           <div style={{ fontWeight: "bold", marginLeft: 12 }}>
             {"Select up to " + maxSelection + " creatives"}
           </div>
-          <span style={{ flex: 1 }} />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
           <Search
             placeholder="Search for creatives"
             onSearch={value => console.log(value)}
-            style={{ width: 240 }}
+            style={{ width: 240, marginLeft: 12 }}
           />
-
-          <div style={{ display: "flex" }}>
+          <span style={{ flex: 1 }} />
+          <div style={{ display: "flex", marginRight: 12 }}>
             <Icon
               type="appstore"
               className={
@@ -222,9 +237,20 @@ export class CreativeGrid extends React.Component {
               onClick={() => onLayoutChange("list")}
             />
           </div>
+          <Pagination
+            size="small"
+            total={this.props.total}
+            current={this.state.current}
+            pageSize={this.state.pageSize}
+            showSizeChanger
+            onShowSizeChange={this.onPageSizeChange}
+            onChange={this.onPageSizeChange}
+            pageSizeOptions={["6", "12", "24"]}
+          />
         </div>
         {this.state.layout === "list" && (
           <Table
+            pagination={{ size: "small", showSizeChanger: true }}
             className={"creative-table"}
             dataSource={dataSource}
             columns={columns}
@@ -239,28 +265,52 @@ export class CreativeGrid extends React.Component {
         )}
         {this.state.layout === "grid" && (
           <div className="cretive-gridview">
-            {items.map((item, index) => (
-              <div
-                style={{
-                  backgroundColor: "lightgray",
-                  width: 240,
-                  height: 252,
-                  margin: 12,
-                  display: "inline-block"
-                }}
-              >
-                <CreativeCard
-                  key={index}
-                  selectable
-                  onSelectCreative={this.props.onSelectCreative}
-                  item={item}
-                  selectedItems={this.props.selectedItems}
-                  maxSelection={maxSelection}
-                />
-              </div>
-            ))}
+            {items.map((item, index) => {
+              if (
+                index <= this.state.pageSize * this.state.current &&
+                index > this.state.pageSize * (this.state.current - 1)
+              )
+                return (
+                  <div
+                    style={{
+                      backgroundColor: "lightgray",
+                      width: 240,
+                      height: 252,
+                      margin: 12,
+                      display: "inline-block"
+                    }}
+                  >
+                    <CreativeCard
+                      key={index}
+                      selectable
+                      onSelectCreative={this.props.onSelectCreative}
+                      item={item}
+                      selectedItems={this.props.selectedItems}
+                      maxSelection={maxSelection}
+                    />
+                  </div>
+                );
+            })}
           </div>
         )}
+        <div
+          style={{
+            display: this.state.layout === "list" ? "none" : "flex",
+            alignItems: "center",
+            justifyContent: "flex-end"
+          }}
+        >
+          <Pagination
+            size="small"
+            total={this.props.total}
+            pageSize={this.state.pageSize}
+            showSizeChanger
+            onShowSizeChange={this.onPageSizeChange}
+            pageSizeOptions={["6", "12", "24"]}
+            current={this.state.current}
+            onChange={this.onPageSizeChange}
+          />
+        </div>
       </div>
     );
   }

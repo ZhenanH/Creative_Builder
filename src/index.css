@@ -93,3 +93,15 @@
 .ant-slider-vertical .ant-slider-dot {
   left: 1px;
 }
+
+.spin-container {
+  width: 100%;
+}
+
+.step-block {
+  transition: background-color 0.1s;
+}
+.step-block:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+}
