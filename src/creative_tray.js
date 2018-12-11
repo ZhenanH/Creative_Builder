@@ -166,6 +166,7 @@ export class CreativeTray extends React.Component {
   };
 
   render() {
+    console.log(this.state.items.length, this.props.items.length);
     let progress = Math.round(
       100 *
         (1 -
@@ -176,14 +177,14 @@ export class CreativeTray extends React.Component {
     );
 
     if (this.props.distribution === 2) {
-      if (this.state.items.length === 2) {
+      if (this.props.items.length === 2) {
         if (moment().isAfter(this.state.creative2date)) {
           progress = 2.5;
         } else {
           progress = 52.5;
         }
       }
-      if (this.state.items.length === 3) {
+      if (this.props.items.length === 3) {
         if (moment().isAfter(this.state.creative3date)) {
           progress = 2.5;
         } else if (moment().isAfter(this.state.creative2date)) {
@@ -196,10 +197,10 @@ export class CreativeTray extends React.Component {
 
     const maxSelection = 3;
     const reachMax = this.state.items.length >= maxSelection;
-    let sliderHeight = (252 + creativeTrayPadding) * this.state.items.length;
+    let sliderHeight = (252 + creativeTrayPadding) * this.props.items.length;
     let marks = {};
     let values = [];
-    if (this.state.items.length <= 1) {
+    if (this.props.items.length <= 1) {
       if (this.props.distribution >= 2) {
         values = [progress, 100];
         marks = {
@@ -239,7 +240,7 @@ export class CreativeTray extends React.Component {
           }
         };
       }
-    } else if (this.state.items.length === 2) {
+    } else if (this.props.items.length === 2) {
       values = [progress, 100];
       marks = {
         0: (
@@ -276,7 +277,7 @@ export class CreativeTray extends React.Component {
           )
         }
       };
-    } else if (this.state.items.length === 3) {
+    } else if (this.props.items.length === 3) {
       values = [progress, 100];
       marks = {
         0: (
@@ -356,7 +357,7 @@ export class CreativeTray extends React.Component {
     }
 
     if (this.props.distribution === 3) {
-      if (this.state.items.length <= 2) {
+      if (this.props.items.length <= 2) {
         values = [progress, 100];
         marks = {
           0: (

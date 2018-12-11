@@ -26,7 +26,7 @@ export class CreativeManager extends React.Component {
   state = {
     pageSize: 30,
     selectedItems: this.props.selectedItems || [],
-    distribution: 1,
+    distribution: this.props.distribution || 1,
     imgs: [],
     value: true,
     productType: 2
@@ -74,10 +74,12 @@ export class CreativeManager extends React.Component {
         nextState.selectedItems.length === 1
       ) {
         this.setState({ distribution: 1 });
+        this.props.onUpldateDistribution(1);
       }
       if (nextState.selectedItems.length > 1) {
         if (this.state.selectedItems.length === 1) {
           this.setState({ distribution: 3 });
+          this.props.onUpldateDistribution(3);
         }
       }
     }
@@ -291,6 +293,7 @@ export class CreativeManager extends React.Component {
                           return;
                         }
                         this.setState({ distribution: e.target.value });
+                        this.props.onUpldateDistribution(e.target.value);
                       }}
                     >
                       <RadioButton value={3}>A/B Test</RadioButton>

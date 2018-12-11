@@ -69,15 +69,15 @@ export class Summary extends React.Component {
         render: (value, record) => (
           <div>
             <div style={{ marginBottom: 12, width: "100%" }}>
-              <Ellipsis tooltip lines={1}>
-                {record.offer ? (
-                  record.offer.offer
-                ) : (
-                  <span style={{ color: "rgba(0,0,0,0.35)" }}>
-                    no offer code bank attached
-                  </span>
-                )}
-              </Ellipsis>
+              {record.offer ? (
+                <Ellipsis tooltip lines={1}>
+                  {record.offer.offer}
+                </Ellipsis>
+              ) : (
+                <span style={{ color: "rgba(0,0,0,0.35)" }}>
+                  no offer code bank attached
+                </span>
+              )}
             </div>
             {record.offer
               ? [
@@ -158,8 +158,8 @@ export class Summary extends React.Component {
                 margin: "12px 0 0 24px"
               }}
             >
-              <div style={{ width: 60 }}>Creative</div>
-              <div style={{ width: "calc(50% + 24px)" }} />
+              <div style={{ width: 80 }}>Creative</div>
+              <div style={{ width: "calc(50% - 12px)" }} />
               <div>Offer</div>
             </div>
           )}

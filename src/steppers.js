@@ -11,7 +11,8 @@ export class Steppers extends React.Component {
     current: 2,
     hasDynamicOffer: true,
     selectedItems: [],
-    selectedStrategy: null
+    selectedStrategy: null,
+    distribution: 1
   };
 
   onOfferTypeSelect = value => {
@@ -50,6 +51,10 @@ export class Steppers extends React.Component {
     this.setState({ activeCreativeKey: key });
   };
 
+  onUpldateDistribution = distribution => {
+    this.setState({ distribution });
+  };
+
   onUpdateOffer = (creative, offer) => {
     this.setState({
       selectedItems: this.state.selectedItems.map(item => {
@@ -85,6 +90,8 @@ export class Steppers extends React.Component {
               onOfferTypeSelect={this.onOfferTypeSelect}
               onUpdateSelectedCreative={this.onUpdateSelectedCreative}
               selectedItems={this.state.selectedItems}
+              onUpldateDistribution={this.onUpldateDistribution}
+              distribution={this.state.distribution}
             />
           </div>
         ),

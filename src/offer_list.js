@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Tag } from "antd";
+import { Table, Progress } from "antd";
 import moment from "moment";
 //const dateFormat = "MM/DD/YYYY";
 const dataSource = [
@@ -22,6 +22,24 @@ const dataSource = [
     offer: "New_1_RXBAR_CouponCodes_JulyFlight",
     targeting: "12/31/2018",
     time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 3,
+    offer: "NEW_COMBINED_BANK_RXBAR_AUG_OCT_20%OFF",
+    targeting: "12/31/2018",
+    time: "12/10/2018 4:17pm"
+  },
+  {
+    key: 4,
+    offer: "NEW_2_RXBAR_CouponCodes_JulyFlight",
+    targeting: "12/31/2018",
+    time: "12/10/2018 5:17pm"
+  },
+  {
+    key: 5,
+    offer: "New_1_RXBAR_CouponCodes_JulyFlight",
+    targeting: "12/31/2018",
+    time: "12/10/2018 5:17pm"
   }
 ];
 
@@ -32,14 +50,36 @@ const columns = [
     key: "offer"
   },
   {
-    title: "Expiration",
+    title: "Availibility",
     dataIndex: "targeting",
-    key: "targeting"
-  },
-  {
-    title: "Availability",
-    dataIndex: "time",
-    key: "time"
+    key: "targeting",
+    render: () => (
+      <div>
+        <Progress
+          key={1}
+          type="circle"
+          percent={30}
+          width={36}
+          style={{ marginRight: 12 }}
+          strokeColor="#F5A622"
+        />
+        <Progress
+          key={2}
+          type="circle"
+          percent={70}
+          width={36}
+          style={{ marginRight: 12 }}
+          strokeColor="#B8E986"
+        />
+        <Progress
+          key={3}
+          type="circle"
+          percent={90}
+          width={36}
+          style={{ marginRight: 12 }}
+        />
+      </div>
+    )
   }
 ];
 
