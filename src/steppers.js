@@ -2,12 +2,13 @@ import React from "react";
 import { Steps, Button, message, Icon } from "antd";
 import { CreativeManager } from "./creative_manager";
 import { StrategyManager } from "./strategy_manager";
+import { OfferManager } from "./offer_manager";
 import { Summary } from "./set_summary";
 const Step = Steps.Step;
 
 export class Steppers extends React.Component {
   state = {
-    current: 0,
+    current: 2,
     hasDynamicOffer: true,
     selectedItems: [],
     selectedStrategy: null
@@ -43,6 +44,21 @@ export class Steppers extends React.Component {
   };
   onUpdateSelectedCreative = items => {
     this.setState({ selectedItems: items });
+  };
+
+  onUpdateActiveCreativeKey = key => {
+    this.setState({ activeCreativeKey: key });
+  };
+
+  onUpdateOffer = (creative, offer) => {
+    this.setState({
+      selectedItems: this.state.selectedItems.map(item => {
+        if (item.id === creative.id) {
+          item.offer = offer;
+        }
+        return item;
+      })
+    });
   };
   render() {
     const { current } = this.state;
@@ -86,7 +102,14 @@ export class Steppers extends React.Component {
             {this.state.hasDynamicOffer ? "Dynamic offer" : "Static offer"}
           </span>
         ),
-        content: <div />,
+        content: (
+          <OfferManager
+            selectedItems={this.state.selectedItems}
+            onUpdateOffer={this.onUpdateOffer}
+            activeCreativeKey={this.state.activeCreativeKey}
+            onUpdateActiveCreativeKey={this.onUpdateActiveCreativeKey}
+          />
+        ),
         status: this.state.hasDynamicOffer ? "wait" : "finish"
       },
       {

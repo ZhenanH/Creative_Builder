@@ -26,8 +26,9 @@ export class CreativeCard extends React.Component {
   render() {
     let bgColor = "rgba(0,0,0,0)";
     const reachMax =
-      this.props.selectedItems &&
-      this.props.selectedItems.length >= this.props.maxSelection;
+      this.props.reachMax ||
+      (this.props.selectedItems &&
+        this.props.selectedItems.length >= this.props.maxSelection);
 
     const onSelect = () => {
       if (reachMax && !this.state.isSelected) {
@@ -92,7 +93,13 @@ export class CreativeCard extends React.Component {
               </div>
             }
             description={
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontWeight: 400
+                }}
+              >
                 <div style={{ flex: 1 }}>{this.props.item.panels} Panels</div>
                 <Icon
                   style={{ flex: 1, color: "#52c41a" }}

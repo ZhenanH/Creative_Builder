@@ -48,6 +48,9 @@ export class CreativeManager extends React.Component {
         this.setState({
           imgs: data.results.map(item => {
             item.panels = item.likes % 2 === 0 ? 2 : 4;
+            item.creativeName =
+              "2018-4_PC_WPR_Adult_Targeting-creative_#" +
+              Math.round(Math.random() * 1000);
             return item;
           }),
           loading: false
@@ -321,7 +324,7 @@ export class CreativeManager extends React.Component {
             </div>
           </TabPane>
           <TabPane tab="Create New Creative" key="2">
-            <CreativeBuilder/>
+            <CreativeBuilder />
           </TabPane>
         </Tabs>
       </div>
