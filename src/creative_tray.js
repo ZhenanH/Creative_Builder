@@ -63,7 +63,7 @@ const SortableItem = SortableElement(
           />
         </a>
       )}
-      <CreativeCard item={value} />
+      <CreativeCard item={value} selectedItems={items} isInTray={true} />
     </div>
   )
 );
@@ -166,7 +166,6 @@ export class CreativeTray extends React.Component {
   };
 
   render() {
-    console.log(this.state.items.length, this.props.items.length);
     let progress = Math.round(
       100 *
         (1 -

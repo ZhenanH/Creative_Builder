@@ -10,7 +10,7 @@ export class Summary extends React.Component {
         title: "photo",
         dataIndex: "url",
         key: "url",
-        width: "10",
+        width: 64,
         render: url => (
           <div
             style={{
@@ -159,7 +159,7 @@ export class Summary extends React.Component {
               }}
             >
               <div style={{ width: 80 }}>Creative</div>
-              <div style={{ width: "calc(50% - 12px)" }} />
+              <div style={{ width: "calc(50%)" }} />
               <div>Offer</div>
             </div>
           )}

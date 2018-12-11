@@ -40,6 +40,7 @@ export class OfferManager extends React.Component {
                     <CreativeCard
                       item={item}
                       reachMax={item.id !== this.state.activeKey}
+                      isInTray={true}
                     />
                   }
                   key={item.id}

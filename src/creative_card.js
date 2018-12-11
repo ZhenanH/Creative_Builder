@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, Icon } from "antd";
+import { Card, Icon, Popover, Menu } from "antd";
 import Ellipsis from "ant-design-pro/lib/Ellipsis";
-
+const SubMenu = Menu.SubMenu;
 const { Meta } = Card;
 
 export class CreativeCard extends React.Component {
@@ -49,8 +49,87 @@ export class CreativeCard extends React.Component {
       bgColor = "rgba(66, 134, 244,0.7";
     }
 
+    if (this.props.isInTray) {
+      bgColor = "rgba(0,0,0,0)";
+    }
+
+    let actions;
+    actions = [
+      <Icon
+        type="eye"
+        onClick={e => {
+          e.stopPropagation();
+          console.log("eye");
+        }}
+      />,
+
+      <Icon
+        type="edit"
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      />,
+      <Popover
+        onClick={e => e.stopPropagation()}
+        overlayClassName="creativeExtra popconfirm-container"
+        placement="top"
+        style={{ background: "white" }}
+        content={
+          <Menu
+            onClick={e => e.domEvent.stopPropagation()}
+            style={{ background: "white" }}
+          >
+            <Menu.Item>
+              <Icon type="delete" />
+              Delete
+            </Menu.Item>
+            <Menu.Item>
+              <Icon type="book" />
+              Archive
+            </Menu.Item>
+            <SubMenu
+              title="Logs"
+              onTitleClick={e => e.domEvent.stopPropagation()}
+            >
+              <Menu.Item>Recent log 1</Menu.Item>
+              <Menu.Item>Recent log 2</Menu.Item>
+              <Menu.Item>Recent log 3</Menu.Item>
+              <Menu.Item>More</Menu.Item>
+            </SubMenu>
+          </Menu>
+        }
+        trigger="click"
+      >
+        <Icon type="ellipsis" className="card-action" />
+      </Popover>
+    ];
+
+    if (this.props.isInTray) {
+      actions = [
+        <Icon
+          type="eye"
+          onClick={e => {
+            e.stopPropagation();
+            console.log("eye");
+          }}
+        />,
+        <Icon
+          type="tag"
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        />
+      ];
+    }
     return (
       <div style={{ position: "relative" }}>
+        <style>
+          {`
+        .ant-popover-inner-content {
+          padding:0
+          }
+          `}
+        </style>
         <Card
           onClick={this.props.selectable ? onSelect : null}
           hoverable
@@ -68,17 +147,7 @@ export class CreativeCard extends React.Component {
               }}
             />
           }
-          actions={[
-            <Icon
-              type="eye"
-              onClick={e => {
-                e.stopPropagation();
-                console.log("eye");
-              }}
-            />,
-            <Icon type="edit" />,
-            <Icon type="ellipsis" />
-          ]}
+          actions={actions}
           bodyStyle={{ padding: 15 }}
         >
           <Meta
@@ -127,7 +196,9 @@ export class CreativeCard extends React.Component {
             type="check"
             style={{
               color:
-                "rgba(255,255,255," + (this.state.isSelected ? "1" : "0") + ")",
+                "rgba(255,255,255," +
+                (this.state.isSelected && !this.props.isInTray ? "1" : "0") +
+                ")",
               left: "47%",
               top: "50%",
               position: "relative",
