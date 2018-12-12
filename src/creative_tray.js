@@ -12,7 +12,15 @@ const dateFormat = "MM/DD/YYYY";
 const creativeTrayPadding = 60;
 
 const SortableItem = SortableElement(
-  ({ value, onRemove, reachMax, onDuplicate, removeDuplicate, items }) => (
+  ({
+    value,
+    onRemove,
+    reachMax,
+    onDuplicate,
+    removeDuplicate,
+    items,
+    onEnterCodeDesign
+  }) => (
     <div
       style={{
         position: "relative",
@@ -63,13 +71,25 @@ const SortableItem = SortableElement(
           />
         </a>
       )}
-      <CreativeCard item={value} selectedItems={items} isInTray={true} />
+      <CreativeCard
+        item={value}
+        selectedItems={items}
+        isInTray={true}
+        onEnterCodeDesign={onEnterCodeDesign}
+      />
     </div>
   )
 );
 
 const SortableList = SortableContainer(
-  ({ items, onRemove, reachMax, onDuplicate, removeDuplicate }) => {
+  ({
+    items,
+    onRemove,
+    reachMax,
+    onDuplicate,
+    removeDuplicate,
+    onEnterCodeDesign
+  }) => {
     return (
       <div>
         {items.map((value, index) => (
@@ -82,6 +102,7 @@ const SortableList = SortableContainer(
             onDuplicate={onDuplicate}
             removeDuplicate={removeDuplicate}
             items={items}
+            onEnterCodeDesign={onEnterCodeDesign}
           />
         ))}
       </div>
@@ -429,7 +450,18 @@ export class CreativeTray extends React.Component {
             value={values}
           />
         </div>
-        <div style={{ position: "relative", left: 12 }}>
+        <div
+          style={{
+            position: "relative",
+            left: 12,
+            minHeight:
+              252 *
+                (this.props.items.length === 3
+                  ? 3
+                  : this.props.items.length + 1) +
+              128
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -457,6 +489,7 @@ export class CreativeTray extends React.Component {
             onDuplicate={this.onDuplicate}
             removeDuplicate={this.removeDuplicate}
             reachMax={reachMax}
+            onEnterCodeDesign={this.props.onEnterCodeDesign}
           />
         </div>
       </div>

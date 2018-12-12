@@ -17,14 +17,14 @@ import {
   Col,
   Modal,
   Popconfirm,
-  Menu,
   Radio,
-  Spin
+  Spin,
+  Tabs
 } from "antd";
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
-
+const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 
 export class CreativeBuilder extends React.Component {
@@ -42,7 +42,8 @@ export class CreativeBuilder extends React.Component {
     orientation: this.props.creative
       ? this.props.creative.orientation
       : "Protrait",
-    size: "4x6"
+    size: "4x6",
+    type: "none"
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -114,6 +115,10 @@ export class CreativeBuilder extends React.Component {
     this.setState({ size: e.target.value });
   };
 
+  onTypeChange = e => {
+    this.setState({ type: e.target.value });
+  };
+
   render() {
     var layout1 = [
       { i: "a", x: 0, y: 0, w: 2, h: 2 },
@@ -131,7 +136,8 @@ export class CreativeBuilder extends React.Component {
 
     return (
       <Row gutter={24}>
-      <style>{`
+        <style>
+          {`
           .gridItem {
             background-size: 100%;
           box-shadow: 0 0 1.25em 0 rgba(0, 0, 0, 0.2);
@@ -149,7 +155,7 @@ export class CreativeBuilder extends React.Component {
           text-transform: capitalize;
         }
         `}
-      </style>
+        </style>
         <Col
           span={6}
           style={{ borderRight: "1px solid #e8e8e8", paddingRight: 24 }}
@@ -219,6 +225,22 @@ export class CreativeBuilder extends React.Component {
               </RadioButton>
             </RadioGroup>
           </FormItem>
+          <FormItem label="Offer Type">
+            <RadioGroup
+              size="small"
+              onChange={this.onTypeChange}
+              value={this.state.type}
+            >
+              <RadioButton value="none">none</RadioButton>
+              <RadioButton value="static">static</RadioButton>
+              <RadioButton value="dynamic">dynamic</RadioButton>
+            </RadioGroup>
+          </FormItem>
+          <div style={{ display: "flex" }}>
+            <Button type="primary" style={{ marginRight: 8 }}>
+              Save Creative
+            </Button>
+          </div>
           {false && (
             <FormItem label="Size">
               <RadioGroup
@@ -236,121 +258,128 @@ export class CreativeBuilder extends React.Component {
         </Col>
 
         <Col span={18} style={{ position: "relative" }}>
-          <div
-            style={{
-              display: "flex",
-              margin: "8px 8px 12px 8px",
-              alignItems: "center",
-              borderBottom: "1px solid #e8e8e8",
-              paddingBottom: 8
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                color: "rgba(0,0,0,0.85)",
-                fontWeight: "bold"
-              }}
-            >
-              Panels
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center"
-              }}
-            >
-              <div ref={this.myRef3} style={{ marginRight: 12 }} />
-
-              <ReactFilestack
-                apikey={"AJNb8qteNQg2Yy1mXNBwQz"}
-                render={({ onPick }) => (
-                  <div>
-                    {this.state.uploadPhotos.length > 0 ? (
-                      <Button
-                        size="small"
-                        type="primary"
-                        onClick={() => {
-                          this.setState({ uploadPhotos: [] });
-                        }}
-                      >
-                        <Icon type="delete" /> Remove all images
-                      </Button>
-                    ) : (
-                      <Button size="small" type="primary" onClick={onPick}>
-                        <Icon type="upload" /> Upload Images (
-                        {this.props.creative
-                          ? this.props.creative.creatives.length
-                          : this.state.uploadPhotos.length}
-                        /{this.state.panels})
-                      </Button>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Panels" key="1" style={{ padding: 12 }}>
+              <div
+                style={{
+                  display: "flex",
+                  margin: "8px 8px 12px 8px",
+                  alignItems: "center",
+                  // borderBottom: "1px solid #e8e8e8",
+                  paddingBottom: 8
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center"
+                  }}
+                >
+                  <ReactFilestack
+                    apikey={"AJNb8qteNQg2Yy1mXNBwQz"}
+                    render={({ onPick }) => (
+                      <div>
+                        {this.state.uploadPhotos.length > 0 ? (
+                          <Button
+                            size="small"
+                            type="primary"
+                            onClick={() => {
+                              this.setState({ uploadPhotos: [] });
+                            }}
+                          >
+                            <Icon type="delete" /> Remove all images
+                          </Button>
+                        ) : (
+                          <Button size="small" type="primary" onClick={onPick}>
+                            <Icon type="upload" /> Upload Images (
+                            {this.props.creative
+                              ? this.props.creative.creatives.length
+                              : this.state.uploadPhotos.length}
+                            /{this.state.panels})
+                          </Button>
+                        )}
+                      </div>
                     )}
-                  </div>
-                )}
-                options={{
-                  fromSources: ["local_file_system"],
-                  disableTransformer: true,
-                  maxFiles:
-                    this.state.panels > this.state.uploadPhotos.length
-                      ? this.state.panels - this.state.uploadPhotos.length
-                      : this.state.panels,
-                  accept: "image/*",
-                  storeTo: {
-                    location: "s3"
-                  },
-                  onFileSelected: file => {
-                    //console.log("ha?", file);
-                    if (file.size > 4000 * 1000) {
-                      console.log(file);
-                      throw new Error(
-                        "File too big, select something smaller than 1MB"
-                      );
-                    }
-                  }
+                    options={{
+                      fromSources: ["local_file_system"],
+                      disableTransformer: true,
+                      maxFiles:
+                        this.state.panels > this.state.uploadPhotos.length
+                          ? this.state.panels - this.state.uploadPhotos.length
+                          : this.state.panels,
+                      accept: "image/*",
+                      storeTo: {
+                        location: "s3"
+                      },
+                      onFileSelected: file => {
+                        //console.log("ha?", file);
+                        if (file.size > 4000 * 1000) {
+                          console.log(file);
+                          throw new Error(
+                            "File too big, select something smaller than 1MB"
+                          );
+                        }
+                      }
+                    }}
+                    onSuccess={res => {
+                      console.log("success ", res);
+                      this.setState({
+                        uploadPhotos: this.state.uploadPhotos.concat(
+                          res.filesUploaded
+                        )
+                      });
+                    }}
+                  />
+                  <div ref={this.myRef3} style={{ marginLeft: 12 }} />
+                </div>
+              </div>
+              {this.state.uploadPhotos.length > 0 && (
+                <Alert
+                  //message="Save Area"
+                  description="Tom will provide a long text here to stress the importantce of save area ..."
+                  type="info"
+                />
+              )}
+              <div
+                style={{
+                  position: "relative",
+                  marginTop: 40,
+                  marginBottom: 24
                 }}
-                onSuccess={res => {
-                  console.log("success ", res);
-                  this.setState({
-                    uploadPhotos: this.state.uploadPhotos.concat(
-                      res.filesUploaded
-                    )
-                  });
-                }}
-              />
-            </div>
-          </div>
-          {this.state.uploadPhotos.length > 0 && (
-            <Alert
-              //message="Save Area"
-              description="Tom will provide a long text here to stress the importantce of save area ..."
-              type="info"
-            />
-          )}
-          <div style={{ position: "relative", marginTop: 40,marginBottom:24 }}>
-            <div
-              ref={this.myRef2}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%"
-              }}
-            />
-            <div ref={this.myRef} />
+              >
+                <div
+                  ref={this.myRef2}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%"
+                  }}
+                />
+                <div ref={this.myRef} />
 
-            {this.state.panelHost ? (
-              <CreativePanels
-                host={this.state.panelHost}
-                host_back={this.state.panelHost_back}
-                zoom={this.state.zoom}
-                items={this.state.uploadPhotos}
-                panels={this.state.panels || 2}
-                orientation={this.state.orientation}
-              />
-            ) : (
-              <Spin size="large" />
-            )}
-          </div>
+                {this.state.panelHost ? (
+                  <CreativePanels
+                    host={this.state.panelHost}
+                    host_back={this.state.panelHost_back}
+                    zoom={this.state.zoom}
+                    items={this.state.uploadPhotos}
+                    panels={this.state.panels || 2}
+                    orientation={this.state.orientation}
+                  />
+                ) : (
+                  <Spin size="large" />
+                )}
+              </div>
+            </TabPane>
+            <TabPane
+              tab="Customize Offer"
+              disabled={this.state.type !== "dynamic"}
+              key="2"
+            >
+              Offer Code Designer coming soon
+            </TabPane>
+          </Tabs>
         </Col>
       </Row>
     );

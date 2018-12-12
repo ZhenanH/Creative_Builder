@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Icon, Popover, Menu } from "antd";
+import { Card, Icon, Popover, Menu, Tag } from "antd";
 import Ellipsis from "ant-design-pro/lib/Ellipsis";
 const SubMenu = Menu.SubMenu;
 const { Meta } = Card;
@@ -45,12 +45,8 @@ export class CreativeCard extends React.Component {
       bgColor = "rgba(200,200,200,0.78";
     }
 
-    if (this.state.isSelected) {
+    if (this.state.isSelected && !this.props.isInTray) {
       bgColor = "rgba(66, 134, 244,0.7";
-    }
-
-    if (this.props.isInTray) {
-      bgColor = "rgba(0,0,0,0)";
     }
 
     let actions;
@@ -63,12 +59,9 @@ export class CreativeCard extends React.Component {
         }}
       />,
 
-      <Icon
-        type="edit"
-        onClick={e => {
-          e.stopPropagation();
-        }}
-      />,
+      <span onClick={e => e.stopPropagation()}>
+        {this.props.item.offerCodeType}
+      </span>,
       <Popover
         onClick={e => e.stopPropagation()}
         overlayClassName="creativeExtra popconfirm-container"
@@ -79,6 +72,10 @@ export class CreativeCard extends React.Component {
             onClick={e => e.domEvent.stopPropagation()}
             style={{ background: "white" }}
           >
+            <Menu.Item>
+              <Icon type="edit" />
+              Edit
+            </Menu.Item>
             <Menu.Item>
               <Icon type="delete" />
               Delete
@@ -113,10 +110,27 @@ export class CreativeCard extends React.Component {
             console.log("eye");
           }}
         />,
-        <Icon
-          type="tag"
+        <span
+          className={
+            this.props.item.offerCodeType === "dynamic" ? "blinking" : ""
+          }
           onClick={e => {
             e.stopPropagation();
+            this.props.onEnterCodeDesign(this.props.item, "2");
+          }}
+        >
+          {this.props.item.offerCodeType}
+        </span>
+      ];
+    }
+
+    if (this.props.inOfferMode) {
+      actions = [
+        <Icon
+          type="eye"
+          onClick={e => {
+            e.stopPropagation();
+            console.log("eye");
           }}
         />
       ];
@@ -128,6 +142,17 @@ export class CreativeCard extends React.Component {
         .ant-popover-inner-content {
           padding:0
           }
+          .blinking{
+
+          animation:blinkingText 1.6s infinite;
+        }
+        @keyframes blinkingText{
+          0%{		color: rgba(0,0,0,1);	}
+          33%{	color: rgba(0,0,0,0.5);	}
+          50%{	color: rgba(0,0,0,0);	}
+          67%{	color:rgba(0,0,0,0.5);	}
+          100%{	color: rgba(0,0,0,1);	}
+        }
           `}
         </style>
         <Card

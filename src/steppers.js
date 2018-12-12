@@ -92,6 +92,7 @@ export class Steppers extends React.Component {
               selectedItems={this.state.selectedItems}
               onUpldateDistribution={this.onUpldateDistribution}
               distribution={this.state.distribution}
+              onUpdateOffer={this.onUpdateOffer}
             />
           </div>
         ),

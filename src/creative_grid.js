@@ -95,7 +95,7 @@ export class CreativeGrid extends React.Component {
   state = {
     layout: "grid",
     selectedRowKeys: this.props.selectedItems.map(item => item.id),
-    pageSize: 12,
+    pageSize: 9,
     current: 1
   };
 

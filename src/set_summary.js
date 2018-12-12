@@ -10,14 +10,15 @@ export class Summary extends React.Component {
         title: "photo",
         dataIndex: "url",
         key: "url",
-        width: 64,
+        width: 80,
         render: url => (
           <div
             style={{
               height: 48,
               width: 48,
               backgroundImage: "url(" + url + ")",
-              backgroundSize: "cover"
+              backgroundSize: "cover",
+              margin: 0
             }}
           />
         )
@@ -155,10 +156,10 @@ export class Summary extends React.Component {
               style={{
                 display: "flex",
                 fontWeight: "bold",
-                margin: "12px 0 0 24px"
+                margin: "12px 0 0 12px"
               }}
             >
-              <div style={{ width: 80 }}>Creative</div>
+              <div style={{ width: 80, paddingLeft: 16 }}>Creative</div>
               <div style={{ width: "calc(50%)" }} />
               <div>Offer</div>
             </div>

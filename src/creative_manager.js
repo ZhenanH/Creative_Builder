@@ -11,11 +11,14 @@ import {
   Icon,
   Input,
   Switch,
-  Spin
+  Spin,
+  Button
 } from "antd";
 import { CreativeTray } from "./creative_tray";
 import { CreativeGrid } from "./creative_grid";
 import { CreativeBuilder } from "./creative_builder.js";
+import { OfferList } from "./offer_list";
+
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -29,13 +32,18 @@ export class CreativeManager extends React.Component {
     distribution: this.props.distribution || 1,
     imgs: [],
     value: true,
-    productType: 2
+    productType: 2,
+    isDesignCode: "1",
+    activeCreative: null
   };
 
   componentDidMount() {
     this.updateFetch(this.state.pageSize);
   }
 
+  onEnterCodeDesign = (creative, isDesignCode) => {
+    this.setState({ isDesignCode: isDesignCode, activeCreative: creative });
+  };
   updateFetch = pageSize => {
     fetch(
       "https://api.unsplash.com/search/photos/?page=1&per_page=" +
@@ -48,6 +56,12 @@ export class CreativeManager extends React.Component {
         this.setState({
           imgs: data.results.map(item => {
             item.panels = item.likes % 2 === 0 ? 2 : 4;
+            item.offerCodeType =
+              item.likes % 3 === 0
+                ? "none"
+                : Math.random() < 0.5
+                ? "dynamic"
+                : "static";
             item.creativeName =
               "2018-4_PC_WPR_Adult_Targeting-creative_#" +
               Math.round(Math.random() * 1000);
@@ -307,23 +321,59 @@ export class CreativeManager extends React.Component {
                   distribution={this.state.distribution}
                   onRemoveSelectedItem={this.onRemoveSelectedItem}
                   onUpateSelectedNum={this.onUpateSelectedNum}
+                  onEnterCodeDesign={this.onEnterCodeDesign}
                 />
               </div>
-              <Spin
-                spinning={this.state.loading}
-                wrapperClassName="spin-container"
-              >
-                <CreativeGrid
-                  selectedItems={this.state.selectedItems}
-                  onSelectCreative={this.onSelectCreative}
-                  distribution={this.state.distribution}
-                  items={this.state.imgs.filter(
-                    item => item.panels === this.state.productType
-                  )}
-                  total={this.state.pageSize}
-                  pageSize={this.state.pageSize}
-                />
-              </Spin>
+              <div>
+                <style>
+                  {`
+                  .creativeTab .ant-tabs-top-bar {
+                    display:none;
+                  }
+                `}
+                </style>
+                <Tabs
+                  className="creativeTab"
+                  activeKey={this.state.isDesignCode}
+                >
+                  <TabPane tab="Tab1" key="1">
+                    <Spin
+                      spinning={this.state.loading}
+                      wrapperClassName="spin-container"
+                    >
+                      <CreativeGrid
+                        selectedItems={this.state.selectedItems}
+                        onSelectCreative={this.onSelectCreative}
+                        distribution={this.state.distribution}
+                        items={this.state.imgs.filter(
+                          item => item.panels === this.state.productType
+                        )}
+                        total={this.state.pageSize}
+                        pageSize={this.state.pageSize}
+                      />
+                    </Spin>
+                  </TabPane>
+                  <TabPane tab="Tab2" key="2">
+                    <div style={{ padding: "0px 12px 12px 12px" }}>
+                      <Button
+                        icon="left"
+                        style={{ marginBottom: 12 }}
+                        onClick={() => this.setState({ isDesignCode: "1" })}
+                      >
+                        Back
+                      </Button>
+
+                      <div style={{ fontWeight: "bold", marginBottom: 12 }}>
+                        Attach Offer Code Bank
+                      </div>
+                      <OfferList
+                        onUpdateOffer={this.props.onUpdateOffer}
+                        activeCreative={this.state.activeCreative}
+                      />
+                    </div>
+                  </TabPane>
+                </Tabs>
+              </div>
             </div>
           </TabPane>
           <TabPane tab="Create New Creative" key="2">
