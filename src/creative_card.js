@@ -55,88 +55,6 @@ export class CreativeCard extends React.Component {
 
     let actions;
     actions = [
-      <Icon
-        type="eye"
-        onClick={e => {
-          e.stopPropagation();
-          console.log("eye");
-        }}
-      />,
-
-      <span
-        onClick={e => e.stopPropagation()}
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <Icon type="barcode" style={{ marginRight: 4 }} />
-        <span style={{ fontSize: 10 }}>{this.props.item.offerCodeType}</span>
-      </span>,
-      <Popover
-        onClick={e => e.stopPropagation()}
-        overlayClassName="creativeExtra popconfirm-container"
-        placement="top"
-        style={{ background: "white" }}
-        content={
-          <Menu
-            onClick={e => e.domEvent.stopPropagation()}
-            style={{ background: "white" }}
-          >
-            <Menu.Item>
-              <Icon type="edit" />
-              Edit
-            </Menu.Item>
-            <Menu.Item>
-              <Icon type="delete" />
-              Delete
-            </Menu.Item>
-            <Menu.Item>
-              <Icon type="book" />
-              Archive
-            </Menu.Item>
-            <SubMenu
-              title="Logs"
-              onTitleClick={e => e.domEvent.stopPropagation()}
-            >
-              <Menu.Item>Recent log 1</Menu.Item>
-              <Menu.Item>Recent log 2</Menu.Item>
-              <Menu.Item>Recent log 3</Menu.Item>
-              <Menu.Item>More</Menu.Item>
-            </SubMenu>
-          </Menu>
-        }
-        trigger="click"
-      >
-        <Icon type="ellipsis" className="card-action" />
-      </Popover>
-    ];
-
-    if (this.props.isInTray) {
-      actions = [
-        <Icon
-          type="eye"
-          onClick={e => {
-            e.stopPropagation();
-            console.log("eye");
-          }}
-        />,
-        <span
-          className={this.props.item.offer ? "attachedOffer" : ""}
-          style={{ display: "flex", alignItems: "center" }}
-          onClick={
-            false
-              ? e => {
-                  e.stopPropagation();
-                  this.props.onEnterCodeDesign(this.props.item, "2");
-                }
-              : null
-          }
-        >
-          <Icon type="barcode" style={{ marginRight: 4 }} />{" "}
-          <span style={{ fontSize: 10 }}>{this.props.item.offerCodeType}</span>
-        </span>
-      ];
-    }
-
-    actions = [
       <div
         style={{ display: "flex", alignItems: "center", lineHeight: "24px" }}
       >
@@ -227,6 +145,48 @@ export class CreativeCard extends React.Component {
         </div>
       </div>
     ];
+
+    if (this.props.isInTray) {
+      actions = [
+        <div
+          style={{ display: "flex", alignItems: "center", lineHeight: "24px" }}
+        >
+          <div
+            style={{ flex: 1 }}
+            className="actionButton"
+            onClick={e => {
+              e.stopPropagation();
+              console.log("eye");
+            }}
+          >
+            <Icon type="eye" />
+          </div>
+
+          <div
+            style={{ flex: 1, display: "flex", justifyContent: "center" }}
+            className="actionButton"
+            onClick={e => {
+              e.stopPropagation();
+              console.log("offer tyope");
+            }}
+          >
+            <span
+              className={this.props.item.offer ? "attachedOffer" : ""}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <Icon type="barcode" style={{ marginRight: 4 }} />
+              <span style={{ fontSize: 10 }}>
+                {this.props.item.offerCodeType}
+              </span>
+            </span>
+          </div>
+        </div>
+      ];
+    }
 
     return (
       <div style={{ position: "relative" }}>
