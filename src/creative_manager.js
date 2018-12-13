@@ -58,10 +58,10 @@ export class CreativeManager extends React.Component {
             item.panels = item.likes % 2 === 0 ? 2 : 4;
             item.offerCodeType =
               item.likes % 3 === 0
-                ? "none"
+                ? "NONE"
                 : Math.random() < 0.5
-                ? "dynamic"
-                : "static";
+                ? "DYNAMIC"
+                : "STATIC";
             item.creativeName =
               "2018-4_PC_WPR_Adult_Targeting-creative_#" +
               Math.round(Math.random() * 1000);
@@ -213,23 +213,7 @@ export class CreativeManager extends React.Component {
             borderBottom: "1px solid #e8e8e8"
           }}
         >
-          <Col span={6} style={{ paddingLeft: 0 }}>
-            <div className="section-title">Offer Type</div>
-            <RadioGroup
-              onChange={this.onOfferTypeChang}
-              value={this.state.value}
-              style={{ marginBottom: 24 }}
-            >
-              <Radio style={radioStyle} value={true}>
-                Dynamic
-              </Radio>
-              <Radio style={radioStyle} value={false}>
-                Static
-              </Radio>
-            </RadioGroup>
-          </Col>
-
-          <Col span={6}>
+          <Col span={6} style={{ padding: 0 }}>
             <div>
               <span className="section-title">Addressee</span>
               {this.state.customeAddressee ? (
@@ -242,7 +226,7 @@ export class CreativeManager extends React.Component {
                 </Tooltip>
               ) : null}
             </div>
-            <div style={{ marginTop: 12 }}>
+            <div style={{ marginTop: 12, marginBottom: 24 }}>
               <Input
                 addonBefore={
                   <Switch

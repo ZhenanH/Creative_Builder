@@ -42,12 +42,16 @@ export class CreativeCard extends React.Component {
     };
 
     if (reachMax) {
-      bgColor = "rgba(200,200,200,0.78";
+      bgColor = "rgba(200,200,200,0.78)";
     }
 
     if (this.state.isSelected && !this.props.isInTray) {
-      bgColor = "rgba(66, 134, 244,0.7";
+      bgColor = "rgba(66, 134, 244,0.7)";
     }
+
+    // if (!this.props.isActive) {
+    //   bgColor = "rgba(255, 255, 255, 0.8)";
+    // }
 
     let actions;
     actions = [
@@ -59,8 +63,12 @@ export class CreativeCard extends React.Component {
         }}
       />,
 
-      <span onClick={e => e.stopPropagation()}>
-        {this.props.item.offerCodeType}
+      <span
+        onClick={e => e.stopPropagation()}
+        style={{ display: "flex", alignItems: "center" }}
+      >
+        <Icon type="barcode" style={{ marginRight: 4 }} />
+        <span style={{ fontSize: 10 }}>{this.props.item.offerCodeType}</span>
       </span>,
       <Popover
         onClick={e => e.stopPropagation()}
@@ -111,30 +119,23 @@ export class CreativeCard extends React.Component {
           }}
         />,
         <span
-          className={
-            this.props.item.offerCodeType === "dynamic" ? "blinking" : ""
+          className={this.props.item.offer ? "attachedOffer" : ""}
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={
+            false
+              ? e => {
+                  e.stopPropagation();
+                  this.props.onEnterCodeDesign(this.props.item, "2");
+                }
+              : null
           }
-          onClick={e => {
-            e.stopPropagation();
-            this.props.onEnterCodeDesign(this.props.item, "2");
-          }}
         >
-          {this.props.item.offerCodeType}
+          <Icon type="barcode" style={{ marginRight: 4 }} />{" "}
+          <span style={{ fontSize: 10 }}>{this.props.item.offerCodeType}</span>
         </span>
       ];
     }
 
-    if (this.props.inOfferMode) {
-      actions = [
-        <Icon
-          type="eye"
-          onClick={e => {
-            e.stopPropagation();
-            console.log("eye");
-          }}
-        />
-      ];
-    }
     return (
       <div style={{ position: "relative" }}>
         <style>
@@ -153,6 +154,18 @@ export class CreativeCard extends React.Component {
           67%{	color:rgba(0,0,0,0.5);	}
           100%{	color: rgba(0,0,0,1);	}
         }
+
+        
+         
+         .disabledLink:hover {
+           color: rgba(0,0,0,0.45) !important;
+           cursor:not-allowed;
+         }
+
+        .attachedOffer {
+          color:rgb(82, 196, 26)
+        }
+        
           `}
         </style>
         <Card
@@ -162,6 +175,8 @@ export class CreativeCard extends React.Component {
           cover={
             <div
               style={{
+                position: "relative",
+                top: -0.5,
                 height: 130,
                 backgroundImage:
                   "url(" +
