@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Icon, Popover, Menu, Tag } from "antd";
+import { Card, Icon, Popover, Menu, Divider } from "antd";
 import Ellipsis from "ant-design-pro/lib/Ellipsis";
 const SubMenu = Menu.SubMenu;
 const { Meta } = Card;
@@ -136,6 +136,98 @@ export class CreativeCard extends React.Component {
       ];
     }
 
+    actions = [
+      <div
+        style={{ display: "flex", alignItems: "center", lineHeight: "24px" }}
+      >
+        <div
+          style={{ flex: 1 }}
+          className="actionButton"
+          onClick={e => {
+            e.stopPropagation();
+            console.log("eye");
+          }}
+        >
+          <Icon type="eye" />
+        </div>
+
+        <div
+          style={{ flex: 1, display: "flex", justifyContent: "center" }}
+          className="actionButton"
+          onClick={e => {
+            e.stopPropagation();
+            console.log("offer tyope");
+          }}
+        >
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Icon type="barcode" style={{ marginRight: 4 }} />
+            <span style={{ fontSize: 10 }}>
+              {this.props.item.offerCodeType}
+            </span>
+          </span>
+        </div>
+
+        <div
+          style={{ flex: 1, padding: 0 }}
+          className="actionButton"
+          onClick={e => e.stopPropagation()}
+        >
+          <Popover
+            onClick={e => e.stopPropagation()}
+            overlayClassName="creativeExtra popconfirm-container"
+            placement="top"
+            style={{ background: "white" }}
+            content={
+              <Menu
+                onClick={e => e.domEvent.stopPropagation()}
+                style={{ background: "white" }}
+              >
+                <Menu.Item>
+                  <Icon type="edit" />
+                  Edit
+                </Menu.Item>
+                <Menu.Item>
+                  <Icon type="delete" />
+                  Delete
+                </Menu.Item>
+                <Menu.Item>
+                  <Icon type="book" />
+                  Archive
+                </Menu.Item>
+                <SubMenu
+                  title="Logs"
+                  onTitleClick={e => e.domEvent.stopPropagation()}
+                >
+                  <Menu.Item>Recent log 1</Menu.Item>
+                  <Menu.Item>Recent log 2</Menu.Item>
+                  <Menu.Item>Recent log 3</Menu.Item>
+                  <Menu.Item>More</Menu.Item>
+                </SubMenu>
+              </Menu>
+            }
+            trigger="click"
+          >
+            <Icon
+              type="ellipsis"
+              className="card-action"
+              style={{
+                height: 47.61,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            />
+          </Popover>
+        </div>
+      </div>
+    ];
+
     return (
       <div style={{ position: "relative" }}>
         <style>
@@ -164,6 +256,24 @@ export class CreativeCard extends React.Component {
 
         .attachedOffer {
           color:rgb(82, 196, 26)
+        }
+
+        .ant-card-actions li  {
+          margin:0;
+        }
+        .ant-card-actions li > span {
+          width:100%;
+        }
+
+        .ant-card-actions li span:hover {
+          color:rgba(0,0,0,0.45);
+        }
+
+        .actionButton{
+          padding:12px 0 12px 0;
+        }
+        .actionButton:hover{
+          background-color:rgba(0,0,0,0.05);
         }
         
           `}

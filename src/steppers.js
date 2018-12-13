@@ -65,6 +65,15 @@ export class Steppers extends React.Component {
       })
     });
   };
+
+  updateFinish = finish => {
+    this.setState({ finish });
+  };
+
+  updateSize = size => {
+    this.setState({ size });
+  };
+
   render() {
     const { current } = this.state;
     const steps = [
@@ -78,7 +87,7 @@ export class Steppers extends React.Component {
             selectedStrategy={this.state.selectedStrategy}
           />
         ),
-        status: "wait"
+        status: this.state.selectedStrategy ? "finish" : "wait"
       },
       {
         title: (
@@ -93,10 +102,19 @@ export class Steppers extends React.Component {
               onUpldateDistribution={this.onUpldateDistribution}
               distribution={this.state.distribution}
               onUpdateOffer={this.onUpdateOffer}
+              size={this.state.size}
+              updateSize={this.updateSize}
+              finish={this.state.finish}
+              updateFinish={this.updateFinish}
             />
           </div>
         ),
-        status: "wait"
+        status:
+          this.state.selectedItems.length > 0 &&
+          this.state.finish &&
+          this.state.size
+            ? "finish"
+            : "wait"
       },
       {
         title: (
@@ -118,7 +136,14 @@ export class Steppers extends React.Component {
             onUpdateActiveCreativeKey={this.onUpdateActiveCreativeKey}
           />
         ),
-        status: this.state.hasDynamicOffer ? "wait" : "finish"
+        status:
+          this.state.selectedItems.length === 0
+            ? "wait"
+            : this.state.selectedItems.find(
+                item => item.offerCodeType === "DYNAMIC" && !item.offer
+              )
+            ? "wait"
+            : "finish"
       },
       {
         title: (
@@ -133,6 +158,12 @@ export class Steppers extends React.Component {
         status: "wait"
       }
     ];
+
+    console.log(
+      this.state.selectedItems.find(
+        item => item.offerCodeType === "DYNAMIC" && !item.offer
+      )
+    );
     return (
       <div style={{ position: "relative" }}>
         <Steps

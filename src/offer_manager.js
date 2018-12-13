@@ -20,7 +20,7 @@ export class OfferManager extends React.Component {
     let currentItem = this.props.selectedItems.find(
       item => item.id === this.state.activeKey
     );
-    if (!currentItem) {
+    if (!currentItem && this.props.selectedItems.length !== 0) {
       currentItem = this.props.selectedItems[0];
       this.setState({ activeKey: currentItem.id });
     }

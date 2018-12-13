@@ -138,6 +138,14 @@ export class CreativeManager extends React.Component {
   handleProductChange = productType => {
     this.setState({ productType });
   };
+
+  handleSizeChange = size => {
+    this.props.updateSize(size);
+  };
+
+  handleFinishChange = finish => {
+    this.props.updateFinish(finish);
+  };
   render() {
     const radioStyle = {
       //display: "block",
@@ -171,21 +179,22 @@ export class CreativeManager extends React.Component {
           <Col span={6}>
             <FormItem label="Orientation">
               <Select
-                defaultValue="lucy"
+                defaultValue="Landscape"
                 style={{ width: "100%" }}
                 onChange={this.handleChange}
               >
-                <Option value="jack">Protrait</Option>
-                <Option value="lucy">Landscape</Option>
+                <Option value="Protrait">Protrait</Option>
+                <Option value="Landscape">Landscape</Option>
               </Select>
             </FormItem>
           </Col>
           <Col span={6}>
             <FormItem label="Size">
               <Select
+                value={this.props.size}
                 placeholder="please select"
                 style={{ width: "100%" }}
-                onChange={this.handleChange}
+                onChange={this.handleSizeChange}
               >
                 <Option value="jack">4 x 6</Option>
                 <Option value="lucy">5 x 7</Option>
@@ -195,9 +204,10 @@ export class CreativeManager extends React.Component {
           <Col span={6}>
             <FormItem label="Finish Type">
               <Select
+                value={this.props.finish}
                 placeholder="please select"
                 style={{ width: "100%" }}
-                onChange={this.handleChange}
+                onChange={this.handleFinishChange}
               >
                 <Option value="jack">Glossy</Option>
                 <Option value="lucy">Mett</Option>
