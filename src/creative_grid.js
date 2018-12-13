@@ -287,6 +287,7 @@ export class CreativeGrid extends React.Component {
                       item={item}
                       selectedItems={this.props.selectedItems}
                       maxSelection={maxSelection}
+                      onEnterEditCreative={this.props.onEnterEditCreative}
                     />
                   </div>
                 );

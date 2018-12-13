@@ -34,7 +34,9 @@ export class CreativeManager extends React.Component {
     value: true,
     productType: 2,
     isDesignCode: "1",
-    activeCreative: null
+    activeCreative: null,
+    editingCreative: null,
+    creativeTab: "1"
   };
 
   componentDidMount() {
@@ -131,6 +133,13 @@ export class CreativeManager extends React.Component {
     });
   };
 
+  onEnterEditCreative = creative => {
+    console.log(creative);
+    this.setState({
+      editingCreative: creative,
+      creativeTab: creative ? "3" : "1"
+    });
+  };
   onAddreseeChange = e => {
     this.setState({ customeAddressee: e });
   };
@@ -263,7 +272,10 @@ export class CreativeManager extends React.Component {
         </Row>
 
         <div className="section-title">Add Creative</div>
-        <Tabs defaultActiveKey="1">
+        <Tabs
+          activeKey={this.state.creativeTab}
+          onChange={creativeTab => this.setState({ creativeTab })}
+        >
           <TabPane tab="Saved Creative" key="1">
             <div style={{ display: "flex" }}>
               <div
@@ -344,6 +356,7 @@ export class CreativeManager extends React.Component {
                         )}
                         total={this.state.pageSize}
                         pageSize={this.state.pageSize}
+                        onEnterEditCreative={this.onEnterEditCreative}
                       />
                     </Spin>
                   </TabPane>
@@ -372,6 +385,16 @@ export class CreativeManager extends React.Component {
           </TabPane>
           <TabPane tab="Create New Creative" key="2">
             <CreativeBuilder />
+          </TabPane>
+          <TabPane
+            tab={this.state.editingCreative ? "Edit Creative" : ""}
+            key="3"
+          >
+            <CreativeBuilder
+              creative={this.state.editingCreative}
+              isEditing
+              onEnterEditCreative={this.onEnterEditCreative}
+            />
           </TabPane>
         </Tabs>
       </div>

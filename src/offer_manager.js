@@ -76,13 +76,19 @@ export class OfferManager extends React.Component {
               </style>
               {currentItem.offerCodeType === "DYNAMIC" ? (
                 <div className="section-title">
-                  Add Offer Code Bank to "
+                  Add Offer Code Bank to
                   <span style={{ fontWeight: 400, color: "rgba(0,0,0,0.65)" }}>
-                    {currentItem.creativeName}
+                    "{currentItem.creativeName}"
                   </span>
+                  "
                 </div>
               ) : (
-                <div className="section-title">No offer code bank needed</div>
+                <div className="section-title">
+                  No offer code bank needed for{" "}
+                  <span style={{ fontWeight: 400, color: "rgba(0,0,0,0.65)" }}>
+                    "{currentItem.creativeName}"
+                  </span>
+                </div>
               )}
               <Tabs
                 className={"invisibleTabs"}

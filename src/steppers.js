@@ -8,7 +8,7 @@ const Step = Steps.Step;
 
 export class Steppers extends React.Component {
   state = {
-    current: 0,
+    current: 1,
     hasDynamicOffer: true,
     selectedItems: [],
     selectedStrategy: null,

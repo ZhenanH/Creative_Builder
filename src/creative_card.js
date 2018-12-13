@@ -10,7 +10,8 @@ export class CreativeCard extends React.Component {
       ? this.props.selectedItems.find(
           item => item.id === this.props.item.id
         ) !== undefined
-      : false
+      : false,
+    editClicked: false
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -97,7 +98,11 @@ export class CreativeCard extends React.Component {
           onClick={e => e.stopPropagation()}
         >
           <Popover
-            onClick={e => e.stopPropagation()}
+            visible={this.state.editClicked}
+            onClick={e => {
+              e.stopPropagation();
+              this.setState({ editClicked: true });
+            }}
             overlayClassName="creativeExtra popconfirm-container"
             placement="top"
             style={{ background: "white" }}
@@ -106,7 +111,12 @@ export class CreativeCard extends React.Component {
                 onClick={e => e.domEvent.stopPropagation()}
                 style={{ background: "white" }}
               >
-                <Menu.Item>
+                <Menu.Item
+                  onClick={() => {
+                    this.props.onEnterEditCreative(this.props.item);
+                    this.setState({ editClicked: false });
+                  }}
+                >
                   <Icon type="edit" />
                   Edit
                 </Menu.Item>

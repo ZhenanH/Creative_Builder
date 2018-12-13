@@ -37,7 +37,19 @@ export class CreativeBuilder extends React.Component {
   }
 
   state = {
-    uploadPhotos: this.props.creative ? this.props.creative.creatives : [],
+    uploadPhotos: this.props.creative
+      ? this.props.creative.panels === 2
+        ? [
+            { url: this.props.creative.urls.regular },
+            { url: this.props.creative.urls.regular }
+          ]
+        : [
+            { url: this.props.creative.urls.regular },
+            { url: this.props.creative.urls.regular },
+            { url: this.props.creative.urls.regular },
+            { url: this.props.creative.urls.regular }
+          ]
+      : [],
     panels: 2,
     orientation: this.props.creative
       ? this.props.creative.orientation
@@ -48,6 +60,24 @@ export class CreativeBuilder extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     //console.log("nextState", nextState);
+
+    if (this.props.creative !== nextProps.creative) {
+      this.setState({
+        uploadPhotos: nextProps.creative
+          ? nextProps.creative.panels === 2
+            ? [
+                { url: nextProps.creative.urls.regular },
+                { url: nextProps.creative.urls.regular }
+              ]
+            : [
+                { url: nextProps.creative.urls.regular },
+                { url: nextProps.creative.urls.regular },
+                { url: nextProps.creative.urls.regular },
+                { url: nextProps.creative.urls.regular }
+              ]
+          : []
+      });
+    }
   }
 
   componentDidMount() {
@@ -132,7 +162,6 @@ export class CreativeBuilder extends React.Component {
       xs: layout1,
       xss: layout1
     };
-    //console.log("create", createAbsoluteGrid);
 
     return (
       <Row gutter={24}>
@@ -189,27 +218,40 @@ export class CreativeBuilder extends React.Component {
                       okText="Yes"
                       onConfirm={this.onConfirm}
                     >
-                      <RadioButton value={2}>2 panels</RadioButton>
+                      <RadioButton value={2} key={1}>
+                        2 panels
+                      </RadioButton>
                     </Popconfirm>,
                     <Popconfirm
                       title="Changing this setting will remove uploaded panels"
                       okText="Yes"
                       onConfirm={this.onConfirm}
                     >
-                      <RadioButton value={4}>4 panels</RadioButton>
+                      <RadioButton value={4} key={2}>
+                        4 panels
+                      </RadioButton>
                     </Popconfirm>,
                     <Popconfirm
                       title="Changing this setting will remove uploaded panels"
                       okText="Yes"
                       onConfirm={this.onConfirm}
                     >
-                      <RadioButton value={8}>8 panels</RadioButton>
+                      <RadioButton value={8} key={3}>
+                        8 panels
+                      </RadioButton>
                     </Popconfirm>
                   ]
                 : [
-                    <RadioButton value={2}>2 panels</RadioButton>,
-                    <RadioButton value={4}>4 panels</RadioButton>,
-                    <RadioButton value={8}>8 panels</RadioButton>
+                    <RadioButton value={2} key={11}>
+                      2 panels
+                    </RadioButton>,
+                    <RadioButton value={4} key={12}>
+                      4 panels
+                    </RadioButton>,
+                    <RadioButton value={8} key={13}>
+                      {" "}
+                      8 panels
+                    </RadioButton>
                   ]}
             </RadioGroup>
           </FormItem>
@@ -237,9 +279,23 @@ export class CreativeBuilder extends React.Component {
             </RadioGroup>
           </FormItem>
           <div style={{ display: "flex" }}>
-            <Button type="primary" style={{ marginRight: 8 }}>
-              Save Creative
-            </Button>
+            {this.props.isEditing ? (
+              [
+                <Button
+                  onClick={() => this.props.onEnterEditCreative(null)}
+                  style={{ marginRight: 8 }}
+                >
+                  Cancel
+                </Button>,
+                <Button type="primary" style={{ marginRight: 8 }}>
+                  Save Creative
+                </Button>
+              ]
+            ) : (
+              <Button type="primary" style={{ marginRight: 8 }}>
+                Save Creative
+              </Button>
+            )}
           </div>
           {false && (
             <FormItem label="Size">
@@ -292,7 +348,8 @@ export class CreativeBuilder extends React.Component {
                         ) : (
                           <Button size="small" type="primary" onClick={onPick}>
                             <Icon type="upload" /> Upload Images (
-                            {this.props.creative
+                            {this.props.creative &&
+                            this.props.creative.creatives
                               ? this.props.creative.creatives.length
                               : this.state.uploadPhotos.length}
                             /{this.state.panels})
