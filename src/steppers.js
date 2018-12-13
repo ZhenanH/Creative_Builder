@@ -8,7 +8,7 @@ const Step = Steps.Step;
 
 export class Steppers extends React.Component {
   state = {
-    current: 1,
+    current: 0,
     hasDynamicOffer: true,
     selectedItems: [],
     selectedStrategy: null,
@@ -159,11 +159,6 @@ export class Steppers extends React.Component {
       }
     ];
 
-    console.log(
-      this.state.selectedItems.find(
-        item => item.offerCodeType === "DYNAMIC" && !item.offer
-      )
-    );
     return (
       <div style={{ position: "relative" }}>
         <Steps
@@ -291,7 +286,18 @@ export class Steppers extends React.Component {
             <Button
               style={{ margin: 8 }}
               type="primary"
-              onClick={() => message.success("Processing complete!")}
+              onClick={() =>
+                message.success("Strategy set attached successfully!")
+              }
+              disabled={
+                this.state.selectedItems.length === 0 ||
+                !this.state.finish ||
+                !this.state.size ||
+                !this.state.selectedStrategy ||
+                this.state.selectedItems.find(
+                  item => item.offerCodeType === "DYNAMIC" && !item.offer
+                )
+              }
             >
               Attach Strategy Set
             </Button>

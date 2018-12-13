@@ -22,6 +22,42 @@ const dataSource = [
     strategy: "AllSiteVisitors_LifeInsurance_AllGeos",
     targeting: ["WHO", "WHERE"],
     time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 3,
+    strategy: "AllSiteVisitors_AIGSpecificSegments_AllLocations",
+    targeting: ["WHO", "WHAT", "WHERE"],
+    time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 4,
+    strategy: "AllSiteVisitors_LifeInsurance_AllGeos",
+    targeting: ["WHO", "WHERE"],
+    time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 5,
+    strategy: "AllSiteVisitors_AIGSpecificSegments_AllLocations",
+    targeting: ["WHO", "WHAT", "WHERE"],
+    time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 6,
+    strategy: "AllSiteVisitors_LifeInsurance_AllGeos",
+    targeting: ["WHO", "WHERE"],
+    time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 7,
+    strategy: "AllSiteVisitors_AIGSpecificSegments_AllLocations",
+    targeting: ["WHO", "WHAT", "WHERE"],
+    time: "12/11/2018 3:17pm"
+  },
+  {
+    key: 8,
+    strategy: "AllSiteVisitors_LifeInsurance_AllGeos",
+    targeting: ["WHO", "WHERE"],
+    time: "12/11/2018 3:17pm"
   }
 ];
 
