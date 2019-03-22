@@ -29,7 +29,7 @@ export class CreativeManager extends React.Component {
   state = {
     pageSize: 30,
     selectedItems: this.props.selectedItems || [],
-    distribution: this.props.distribution || 1,
+    distribution: this.props.distribution || 3,
     imgs: [],
     value: true,
     productType: 2,
@@ -89,8 +89,8 @@ export class CreativeManager extends React.Component {
         nextState.selectedItems.length === 0 ||
         nextState.selectedItems.length === 1
       ) {
-        this.setState({ distribution: 1 });
-        this.props.onUpldateDistribution(1);
+        // this.setState({ distribution: 1 });
+        // this.props.onUpldateDistribution(1);
       }
       if (nextState.selectedItems.length > 1) {
         if (this.state.selectedItems.length === 1) {
@@ -134,7 +134,7 @@ export class CreativeManager extends React.Component {
   };
 
   onEnterEditCreative = creative => {
-    console.log(creative);
+    // console.log(creative);
     this.setState({
       editingCreative: creative,
       creativeTab: creative ? "3" : "1"
@@ -164,7 +164,7 @@ export class CreativeManager extends React.Component {
 
     return (
       <div style={{ padding: 24 }}>
-        <div className="section-title">Select Product</div>
+        <div className="section-title">Product Settings</div>
         <Row
           gutter={16}
           style={{
@@ -172,32 +172,7 @@ export class CreativeManager extends React.Component {
             borderBottom: "1px solid #e8e8e8"
           }}
         >
-          <Col span={6}>
-            <FormItem label="Product Type">
-              <Select
-                value={this.state.productType}
-                style={{ width: "100%" }}
-                onChange={this.handleProductChange}
-              >
-                <Option value={2}>Postcard</Option>
-                <Option value={4}>4 panel catalog</Option>
-                <Option value={8}>8 panel catalog</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span={6}>
-            <FormItem label="Orientation">
-              <Select
-                defaultValue="Landscape"
-                style={{ width: "100%" }}
-                onChange={this.handleChange}
-              >
-                <Option value="Protrait">Protrait</Option>
-                <Option value="Landscape">Landscape</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span={6}>
+          <Col span={8}>
             <FormItem label="Size">
               <Select
                 value={this.props.size}
@@ -210,7 +185,7 @@ export class CreativeManager extends React.Component {
               </Select>
             </FormItem>
           </Col>
-          <Col span={6}>
+          <Col span={8}>
             <FormItem label="Finish Type">
               <Select
                 value={this.props.finish}
@@ -219,22 +194,13 @@ export class CreativeManager extends React.Component {
                 onChange={this.handleFinishChange}
               >
                 <Option value="jack">Glossy</Option>
-                <Option value="lucy">Mett</Option>
+                <Option value="lucy">Matte</Option>
               </Select>
             </FormItem>
           </Col>
-        </Row>
-
-        <Row
-          gutter={16}
-          style={{
-            margin: "12px 0 24px 0px",
-            borderBottom: "1px solid #e8e8e8"
-          }}
-        >
-          <Col span={6} style={{ padding: 0 }}>
-            <div>
-              <span className="section-title">Addressee</span>
+          <Col span={8}>
+            <div style={{ marginTop: 10, color: "rgbba(0,0,0,0.85)" }}>
+              <span>Addressee:</span>
               {this.state.customeAddressee ? (
                 <Tooltip title="The USPS has strict rules on what can be used as a Custom Addressee. Please ensure you get this approved by Tom Gibbons before proceeding">
                   <Icon
@@ -245,7 +211,7 @@ export class CreativeManager extends React.Component {
                 </Tooltip>
               ) : null}
             </div>
-            <div style={{ marginTop: 12, marginBottom: 24 }}>
+            <div style={{ marginTop: 12 }}>
               <Input
                 addonBefore={
                   <Switch
@@ -298,8 +264,8 @@ export class CreativeManager extends React.Component {
                   <span
                     style={{
                       margin: "12px 0 12px 12px",
-                      fontWeight: "normal",
-                      display: this.state.distribution === 1 ? "none" : "inline"
+                      fontWeight: "normal"
+                      //display: this.state.distribution === 1 ? "none" : "inline"
                     }}
                   >
                     <RadioGroup
@@ -316,8 +282,8 @@ export class CreativeManager extends React.Component {
                         this.props.onUpldateDistribution(e.target.value);
                       }}
                     >
-                      <RadioButton value={3}>A/B Test</RadioButton>
-                      <RadioButton value={2}>Scheduling</RadioButton>
+                      <RadioButton value={3}>Normal</RadioButton>
+                      <RadioButton value={2}>Schedule</RadioButton>
                     </RadioGroup>
                   </span>
                 </div>
@@ -330,7 +296,7 @@ export class CreativeManager extends React.Component {
                   onEnterCodeDesign={this.onEnterCodeDesign}
                 />
               </div>
-              <div>
+              <div style={{ flex: 1 }}>
                 <style>
                   {`
                   .creativeTab .ant-tabs-top-bar {

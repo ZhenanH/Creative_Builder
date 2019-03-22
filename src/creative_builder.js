@@ -3,6 +3,7 @@ import "./index.css";
 import "ant-design-pro/dist/ant-design-pro.css";
 import ReactFilestack, { client } from "filestack-react";
 import { CreativePanels } from "./react_absolute_grid/creative_panels.js";
+import { CodeDesigner } from "./CodeDesigner/CodeDesigner";
 import * as _ from "lodash";
 import {
   Alert,
@@ -201,9 +202,6 @@ export class CreativeBuilder extends React.Component {
             <FormItem label="Expiration date">
               <DatePicker style={{ width: "100%" }} />
             </FormItem>
-            <FormItem label="Note">
-              <TextArea rows={3} placeholder="Enter creative description" />
-            </FormItem>
           </Form>
           <FormItem label="Number of Panels">
             <RadioGroup
@@ -332,7 +330,7 @@ export class CreativeBuilder extends React.Component {
                   }}
                 >
                   <ReactFilestack
-                    apikey={"AJNb8qteNQg2Yy1mXNBwQz"}
+                    apikey="AJNb8qteNQg2Yy1mXNBwQz"
                     render={({ onPick }) => (
                       <div>
                         {this.state.uploadPhotos.length > 0 ? (
@@ -434,7 +432,13 @@ export class CreativeBuilder extends React.Component {
               disabled={this.state.type !== "dynamic"}
               key="2"
             >
-              Offer Code Designer coming soon
+              <CodeDesigner
+                image={
+                  this.state.uploadPhotos.length > 0
+                    ? this.state.uploadPhotos.slice(-1)[0].url
+                    : null
+                }
+              />
             </TabPane>
           </Tabs>
         </Col>

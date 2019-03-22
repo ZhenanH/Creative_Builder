@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Icon, Popover, Menu, Divider } from "antd";
+import { Card, Icon, Popover, Menu, Divider, Tooltip } from "antd";
 import Ellipsis from "ant-design-pro/lib/Ellipsis";
 const SubMenu = Menu.SubMenu;
 const { Meta } = Card;
@@ -85,10 +85,12 @@ export class CreativeCard extends React.Component {
               justifyContent: "center"
             }}
           >
-            <Icon type="barcode" style={{ marginRight: 4 }} />
-            <span style={{ fontSize: 10 }}>
-              {this.props.item.offerCodeType}
-            </span>
+            <span style={{ marginRight: 4 }}> Status:</span>{" "}
+            {Math.random() < 0.2 ? (
+              <Icon type="stop" />
+            ) : (
+              <Icon type="check-circle" style={{ color: "#52c41a" }} />
+            )}
           </span>
         </div>
 
@@ -98,7 +100,7 @@ export class CreativeCard extends React.Component {
           onClick={e => e.stopPropagation()}
         >
           <Popover
-            visible={this.state.editClicked}
+            //visible={this.state.editClicked}
             onClick={e => {
               e.stopPropagation();
               this.setState({ editClicked: true });
@@ -276,7 +278,14 @@ export class CreativeCard extends React.Component {
                 <Ellipsis tooltip length={18}>
                   2018-4_PC_WPR_Adult_Targeting-creative
                 </Ellipsis>
-                <span style={{ fontSize: 11, marginLeft: 8, color: "gray" }}>
+                <span
+                  style={{
+                    fontSize: 11,
+                    marginLeft: 8,
+                    color: "gray",
+                    fontWeight: 300
+                  }}
+                >
                   #2454
                 </span>
               </div>
@@ -289,14 +298,19 @@ export class CreativeCard extends React.Component {
                   fontWeight: 400
                 }}
               >
-                <div style={{ flex: 1 }}>{this.props.item.panels} Panels</div>
-                <Icon
-                  style={{ flex: 1, color: "#52c41a" }}
-                  type="clock-circle"
-                />
-                <div style={{ flex: 1 }}>
-                  Status:{" "}
-                  <Icon type="check-circle" style={{ color: "#52c41a" }} />
+                <div style={{ flex: 1, fontSize: 12 }}>
+                  {this.props.item.panels} Panels
+                </div>
+                <div style={{ flex: 1, alignItems: "center" }}>
+                  <Icon type="barcode" style={{ marginRight: 4 }} />
+                  <span style={{ fontSize: 10 }}>
+                    {this.props.item.offerCodeType}
+                  </span>
+                </div>
+                <div style={{ flex: 1, textAlign: "center", fontSize: 12 }}>
+                  <Tooltip title="Expires on May 1, 2019">
+                    <Icon type="calendar" /> 5/1
+                  </Tooltip>
                 </div>
               </div>
             }

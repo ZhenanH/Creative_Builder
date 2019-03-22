@@ -1,9 +1,9 @@
 import React from "react";
 import { CreativeCard } from "./creative_card";
-import { Input, Table, Icon, Pagination } from "antd";
+import { Input, Table, Icon, Pagination, Select, Row, Col } from "antd";
 
 const Search = Input.Search;
-
+const Option = Select.Option;
 const columns = [
   {
     title: "photo",
@@ -96,7 +96,8 @@ export class CreativeGrid extends React.Component {
     layout: "grid",
     selectedRowKeys: this.props.selectedItems.map(item => item.id),
     pageSize: 9,
-    current: 1
+    current: 1,
+    productType: 2
   };
 
   onPageSizeChange = (current, pageSize) => {
@@ -146,6 +147,10 @@ export class CreativeGrid extends React.Component {
       this.props.items.filter(item => item.id === selectedItemKey)[0],
       this.state.selectedRowKeys.length < selectedRowKeys.length
     );
+  };
+
+  handleProductChange = productType => {
+    this.setState({ productType });
   };
 
   render() {
@@ -210,47 +215,81 @@ export class CreativeGrid extends React.Component {
             {"Select up to " + maxSelection + " creatives"}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
-          <Search
-            placeholder="Search for creatives"
-            onSearch={value => console.log(value)}
-            style={{ width: 240, marginLeft: 12 }}
-          />
-          <span style={{ flex: 1 }} />
-          <div style={{ display: "flex", marginRight: 12 }}>
-            <Icon
-              type="appstore"
-              className={
-                this.state.layout === "grid"
-                  ? "layout-button layout-button-active"
-                  : "layout-button"
-              }
-              onClick={() => onLayoutChange("grid")}
-            />
-            <Icon
-              type="bars"
-              className={
-                this.state.layout === "list"
-                  ? "layout-button layout-button-active"
-                  : "layout-button"
-              }
-              onClick={() => onLayoutChange("list")}
-            />
+        <div
+          style={{ display: "flex", alignItems: "center", marginBottom: 12 }}
+        >
+          <div style={{ textAlign: "right" }}>
+            <div style={{ display: "flex", marginRight: 12 }}>
+              <Icon
+                type="appstore"
+                className={
+                  this.state.layout === "grid"
+                    ? "layout-button layout-button-active"
+                    : "layout-button"
+                }
+                onClick={() => onLayoutChange("grid")}
+              />
+              <Icon
+                type="bars"
+                className={
+                  this.state.layout === "list"
+                    ? "layout-button layout-button-active"
+                    : "layout-button"
+                }
+                onClick={() => onLayoutChange("list")}
+              />
+            </div>
           </div>
-          <Pagination
-            size="small"
-            total={this.props.total}
-            current={this.state.current}
-            pageSize={this.state.pageSize}
-            showSizeChanger
-            onShowSizeChange={this.onPageSizeChange}
-            onChange={this.onPageSizeChange}
-            pageSizeOptions={["6", "12", "24"]}
-          />
+          <Row
+            type="flex"
+            style={{ alignItems: "center", flex: 1 }}
+            gutter={16}
+          >
+            <Col span={8}>
+              <Search
+                placeholder="Search for creatives by name"
+                onSearch={value => console.log(value)}
+              />
+            </Col>
+            <Col span={8}>
+              <Select
+                placeholder={
+                  <span>
+                    <Icon type="filter" /> Select product type
+                  </span>
+                }
+                // value={this.state.productType}
+                style={{ width: "100%" }}
+                onChange={this.handleProductChange}
+              >
+                <Option value={2}>Postcard</Option>
+                <Option value={4}>4 panel catalog</Option>
+                <Option value={8}>8 panel catalog</Option>
+              </Select>
+            </Col>
+            <Col span={8}>
+              <Select
+                placeholder={
+                  <span>
+                    <Icon type="filter" /> Select orientation
+                  </span>
+                }
+                style={{ width: "100%" }}
+                onChange={this.handleChange}
+              >
+                <Option value="Protrait">Protrait</Option>
+                <Option value="Landscape">Landscape</Option>
+              </Select>
+            </Col>
+          </Row>
         </div>
         {this.state.layout === "list" && (
           <Table
-            pagination={{ size: "small", showSizeChanger: true }}
+            pagination={{
+              size: "small",
+              showSizeChanger: true,
+              showTotal: total => `Total ${total} items`
+            }}
             className={"creative-table"}
             dataSource={dataSource}
             columns={columns}
@@ -303,13 +342,10 @@ export class CreativeGrid extends React.Component {
         >
           <Pagination
             size="small"
-            total={this.props.total}
-            pageSize={this.state.pageSize}
+            total={dataSource.length}
             showSizeChanger
             onShowSizeChange={this.onPageSizeChange}
-            pageSizeOptions={["6", "12", "24"]}
-            current={this.state.current}
-            onChange={this.onPageSizeChange}
+            showTotal={total => `Total ${total} items`}
           />
         </div>
       </div>

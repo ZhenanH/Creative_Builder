@@ -12,7 +12,7 @@ export class Steppers extends React.Component {
     hasDynamicOffer: true,
     selectedItems: [],
     selectedStrategy: null,
-    distribution: 1
+    distribution: 3
   };
 
   onOfferTypeSelect = value => {

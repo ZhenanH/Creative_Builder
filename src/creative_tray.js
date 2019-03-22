@@ -113,8 +113,8 @@ const SortableList = SortableContainer(
 const creativePlaceHolder = num => {
   let text = "creative";
   if (num === 1) text = "1 st creative";
-  if (num === 2) text = "2nd creative";
-  if (num === 3) text = "3rd creative(optional)";
+  if (num === 2) text = "Another creative";
+  if (num === 3) text = "Another creative";
   return (
     <div
       style={{
@@ -217,7 +217,9 @@ export class CreativeTray extends React.Component {
 
     const maxSelection = 3;
     const reachMax = this.state.items.length >= maxSelection;
-    let sliderHeight = (252 + creativeTrayPadding) * this.props.items.length;
+    let sliderHeight =
+      (252 + creativeTrayPadding) *
+      (this.props.items.length === 0 ? 1 : this.props.items.length);
     let marks = {};
     let values = [];
     if (this.props.items.length <= 1) {
@@ -254,7 +256,7 @@ export class CreativeTray extends React.Component {
                 }}
               >
                 {startDate}{" "}
-                <span className="start-end-label">FLIGHT START</span>
+                <span className="start-end-label">FLIGHT START 1</span>
               </div>
             )
           }
@@ -361,7 +363,9 @@ export class CreativeTray extends React.Component {
           <div
             style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
           >
-            {endDate} <span className="start-end-label">FLIGHT END</span>
+            <span className="start-end-label" style={{ marginLeft: 0 }}>
+              FLIGHT END
+            </span>
           </div>
         ),
         100: {
@@ -369,7 +373,9 @@ export class CreativeTray extends React.Component {
             <div
               style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
             >
-              {startDate} <span className="start-end-label">FLIGHT START</span>
+              <span className="start-end-label" style={{ marginLeft: 0 }}>
+                FLIGHT START
+              </span>
             </div>
           )
         }
@@ -377,6 +383,7 @@ export class CreativeTray extends React.Component {
     }
 
     if (this.props.distribution === 3) {
+      progress = 0;
       if (this.props.items.length <= 2) {
         values = [progress, 100];
         marks = {
@@ -384,7 +391,9 @@ export class CreativeTray extends React.Component {
             <div
               style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
             >
-              {endDate} <span className="start-end-label">FLIGHT END</span>
+              <span className="start-end-label" style={{ marginLeft: 0 }}>
+                FLIGHT END
+              </span>
             </div>
           ),
           100: {
@@ -396,8 +405,9 @@ export class CreativeTray extends React.Component {
                   marginLeft: 16
                 }}
               >
-                {startDate}{" "}
-                <span className="start-end-label">FLIGHT START</span>
+                <span className="start-end-label" style={{ marginLeft: 0 }}>
+                  FLIGHT START
+                </span>
               </div>
             )
           }
@@ -409,7 +419,9 @@ export class CreativeTray extends React.Component {
             <div
               style={{ display: "flex", alignItems: "center", marginLeft: 16 }}
             >
-              {endDate} <span className="start-end-label">FLIGHT END</span>
+              <span className="start-end-label" style={{ marginLeft: 0 }}>
+                FLIGHT END
+              </span>
             </div>
           ),
           100: {
@@ -421,14 +433,16 @@ export class CreativeTray extends React.Component {
                   marginLeft: 16
                 }}
               >
-                {startDate}{" "}
-                <span className="start-end-label">FLIGHT START</span>
+                <span className="start-end-label" style={{ marginLeft: 0 }}>
+                  FLIGHT START
+                </span>
               </div>
             )
           }
         };
       }
     }
+
     return (
       <div style={{ display: "flex", margin: "34px 0 24px 0" }}>
         <div style={{ height: sliderHeight }}>
