@@ -39,6 +39,7 @@ export class CreativeBuilder extends React.Component {
   }
 
   state = {
+    currentStep:0,
     uploadPhotos: this.props.creative
       ? this.props.creative.panels === 2
         ? [
@@ -191,7 +192,7 @@ export class CreativeBuilder extends React.Component {
           span={6}
           style={{ borderRight: "1px solid #e8e8e8", paddingRight: 24 }}
         >
-         <CreativeApprovalDropdown/>
+         <CreativeApprovalDropdown currentStep = {this.state.currentStep} approve={()=>this.setState({currentStep:this.state.currentStep+1})}/>
           <Form>
             <FormItem label="Creative Name">
               <Input
