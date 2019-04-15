@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@bit/zhenanh.pdm.creative-approval-dropdown": "^0.0.5",
     "ant-design-pro": "2.1.1",
     "antd": "latest",
     "filestack-js": "1.8.2",

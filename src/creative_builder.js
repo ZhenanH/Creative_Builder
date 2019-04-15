@@ -4,6 +4,7 @@ import "ant-design-pro/dist/ant-design-pro.css";
 import ReactFilestack, { client } from "filestack-react";
 import { CreativePanels } from "./react_absolute_grid/creative_panels.js";
 import { CodeDesigner } from "./CodeDesigner/CodeDesigner";
+import CreativeApprovalDropdown from "@bit/zhenanh.pdm.creative-approval-dropdown"
 import * as _ from "lodash";
 import {
   Alert,
@@ -190,6 +191,7 @@ export class CreativeBuilder extends React.Component {
           span={6}
           style={{ borderRight: "1px solid #e8e8e8", paddingRight: 24 }}
         >
+         <CreativeApprovalDropdown/>
           <Form>
             <FormItem label="Creative Name">
               <Input
