@@ -192,8 +192,14 @@ export class CreativeBuilder extends React.Component {
           span={6}
           style={{ borderRight: "1px solid #e8e8e8", paddingRight: 24 }}
         >
-         <CreativeApprovalDropdown currentStep = {this.state.currentStep} approve={()=>this.setState({currentStep:this.state.currentStep+1})}/>
+       
           <Form>
+          { this.props.isEditing &&
+     
+     <FormItem label="Approval Process">
+     <CreativeApprovalDropdown  currentStep = {this.state.currentStep} approve={()=>this.setState({currentStep:this.state.currentStep+1})}/>
+     </FormItem>
+       }
             <FormItem label="Creative Name">
               <Input
                 placeholder="Enter creative name"
@@ -435,6 +441,7 @@ export class CreativeBuilder extends React.Component {
               disabled={this.state.type !== "dynamic"}
               key="2"
             >
+              <div style={{maxWidth:600,marginLeft:"auto",marginRight:"auto"}}>
               <CodeDesigner
                 image={
                   this.state.uploadPhotos.length > 0
@@ -442,6 +449,7 @@ export class CreativeBuilder extends React.Component {
                     : null
                 }
               />
+              </div>
             </TabPane>
           </Tabs>
         </Col>

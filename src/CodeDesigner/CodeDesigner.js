@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Input, Icon, InputNumber } from "antd";
+import { Input, Icon, Popover, Slider } from "antd";
 import Draggable from "react-draggable";
-import { SketchPicker } from "react-color";
+import { GithubPicker } from "react-color";
 import { StyledCodeDesigner } from "./StyledCodeDesigner";
 
 export class CodeDesigner extends React.Component {
   state = {
     displayColorPicker: false,
-    color: "#00BCF2",
+    color: "white",
     fontSize: 20,
     initalClass: "initial"
   };
@@ -37,8 +37,8 @@ export class CodeDesigner extends React.Component {
     const popover = {
       position: "absolute",
       zIndex: "2",
-      left: 300,
-      top: 0
+      left: 160,
+      //top: -30
     };
     const cover = {
       position: "fixed",
@@ -94,29 +94,29 @@ export class CodeDesigner extends React.Component {
                   className="drag"
                   style={{ margin: "0 12px 0 8px" }}
                 />
-                <InputNumber
-                  size="small"
-                  value={this.state.fontSize}
-                  style={{ width: 68, margin: "0 8px 0 8px" }}
-                  formatter={value => `${value}px`}
-                  parser={value => value.replace("px", "")}
-                  onChange={this.onFontSizeChange}
-                />
+                <Popover content={ <div style={{width:100,height:40,paddingTop:5}}><Slider tooltipVisible={false} value={this.state.fontSize} onChange={this.onFontSizeChange} max={30} min={10} /></div> }>
+                  <Icon type="font-size" trigger="click" style={{margin: "0 12px 0 8px"}}  />
+                </Popover>
+                
                 <div
                   style={{
                     backgroundColor: this.state.color,
                     width: 20,
                     height: 20,
-                    border: "2px solid white",
+                    border: "2px solid lightgray",
                     display: "inline-block"
                   }}
                   onClick={this.handleClick}
                 />
                 {this.state.displayColorPicker ? (
                   <div style={popover}>
-                    <SketchPicker
+                    <GithubPicker
+                      width="65px"
                       color={this.state.color}
                       onChange={this.handleChange}
+                      colors={["black","white"]}
+                      triangle = "hide"
+                      style={{backgroundColor:"lightgray"}}
                     />
                   </div>
                 ) : null}

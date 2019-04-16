@@ -1,10 +1,12 @@
 import styled, { css } from "styled-components";
 import { Modal } from "antd";
 export const StyledCodeDesigner = styled.div`
+  
   padding-top: 115.5%;
   width: 100%;
   position: relative;
   text-align: center;
+  
 
   .container {
     position: absolute;
@@ -26,6 +28,10 @@ export const StyledCodeDesigner = styled.div`
     opacity: 1;
     cursor: move;
     background-color: #e6feff;
+  }
+
+  .github-picker {
+    background-color:#e6feff !important;
   }
 
   .handle {

@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Icon, Popover, Menu, Divider, Tooltip } from "antd";
 import Ellipsis from "ant-design-pro/lib/Ellipsis";
+import CreativeApprovalDropdown from "@bit/zhenanh.pdm.creative-approval-dropdown"
 const SubMenu = Menu.SubMenu;
 const { Meta } = Card;
 
@@ -11,7 +12,8 @@ export class CreativeCard extends React.Component {
           item => item.id === this.props.item.id
         ) !== undefined
       : false,
-    editClicked: false
+    editClicked: false,
+    currentStep: Math.round(Math.random()*3)
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -85,12 +87,7 @@ export class CreativeCard extends React.Component {
               justifyContent: "center"
             }}
           >
-            <span style={{ marginRight: 4 }}> Status:</span>{" "}
-            {Math.random() < 0.2 ? (
-              <Icon type="stop" />
-            ) : (
-              <Icon type="check-circle" style={{ color: "#52c41a" }} />
-            )}
+            <CreativeApprovalDropdown currentStep = {this.state.currentStep} approve={()=>this.setState({currentStep:this.state.currentStep+1})}/>
           </span>
         </div>
 
