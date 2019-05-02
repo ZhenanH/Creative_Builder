@@ -164,54 +164,18 @@ export class CreativeManager extends React.Component {
 
     return (
       <div style={{ padding: 24 }}>
-        <div className="section-title">Product Settings</div>
+        <div className="section-title">Addressee</div>
         <Row
-          gutter={16}
+          
           style={{
             margin: "12px 0 24px 0px",
             borderBottom: "1px solid #e8e8e8"
           }}
         >
+          
           <Col span={8}>
-            <FormItem label="Size">
-              <Select
-                value={this.props.size}
-                placeholder="please select"
-                style={{ width: "100%" }}
-                onChange={this.handleSizeChange}
-              >
-                <Option value="jack">4 x 6</Option>
-                <Option value="lucy">5 x 7</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span={8}>
-            <FormItem label="Finish Type">
-              <Select
-                value={this.props.finish}
-                placeholder="please select"
-                style={{ width: "100%" }}
-                onChange={this.handleFinishChange}
-              >
-                <Option value="jack">Glossy</Option>
-                <Option value="lucy">Matte</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span={8}>
-            <div style={{ marginTop: 10, color: "rgbba(0,0,0,0.85)" }}>
-              <span>Addressee:</span>
-              {this.state.customeAddressee ? (
-                <Tooltip title="The USPS has strict rules on what can be used as a Custom Addressee. Please ensure you get this approved by Tom Gibbons before proceeding">
-                  <Icon
-                    type="info-circle"
-                    theme="outlined"
-                    style={{ color: "orange", marginLeft: 8 }}
-                  />
-                </Tooltip>
-              ) : null}
-            </div>
-            <div style={{ marginTop: 12 }}>
+            
+            <div style={{ marginTop: 12,marginBottom:24, display:"flex" }}>
               <Input
                 addonBefore={
                   <Switch
@@ -233,69 +197,24 @@ export class CreativeManager extends React.Component {
                 }
                 placeholder="Type in addressee"
               />
+              {this.state.customeAddressee ? (
+                <Tooltip title="The USPS has strict rules on what can be used as a Custom Addressee. Please ensure you get this approved by Tom Gibbons before proceeding">
+                  <Icon
+                    type="info-circle"
+                    theme="outlined"
+                    style={{ color: "orange", marginLeft: 8, display:"flex",alignItems:"center" }}
+                  />
+                </Tooltip>
+              ) : null}
             </div>
           </Col>
         </Row>
 
         <div className="section-title">Add Creative</div>
-        <Tabs
-          activeKey={this.state.creativeTab}
-          onChange={creativeTab => this.setState({ creativeTab })}
-        >
-          <TabPane tab="Saved Creative" key="1">
+        
             <div style={{ display: "flex" }}>
-              <div
-                style={{
-                  minWidth: 320,
-                  maxWidth: 320,
-                  borderRight: "1px solid #E8E8E8",
-                  minHeight: 400
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "bold",
-                    marginTop: 12,
-                    height: 24
-                  }}
-                >
-                  Distribution
-                  <span
-                    style={{
-                      margin: "12px 0 12px 12px",
-                      fontWeight: "normal"
-                      //display: this.state.distribution === 1 ? "none" : "inline"
-                    }}
-                  >
-                    <RadioGroup
-                      size="small"
-                      value={this.state.distribution}
-                      onChange={e => {
-                        if (
-                          e.target.value === 1 &&
-                          this.state.selectedItems.length > 1
-                        ) {
-                          return;
-                        }
-                        this.setState({ distribution: e.target.value });
-                        this.props.onUpldateDistribution(e.target.value);
-                      }}
-                    >
-                      <RadioButton value={3}>Normal</RadioButton>
-                      <RadioButton value={2}>Schedule</RadioButton>
-                    </RadioGroup>
-                  </span>
-                </div>
-
-                <CreativeTray
-                  items={this.state.selectedItems}
-                  distribution={this.state.distribution}
-                  onRemoveSelectedItem={this.onRemoveSelectedItem}
-                  onUpateSelectedNum={this.onUpateSelectedNum}
-                  onEnterCodeDesign={this.onEnterCodeDesign}
-                />
-              </div>
+             
+                
               <div style={{ flex: 1 }}>
                 <style>
                   {`
@@ -304,11 +223,7 @@ export class CreativeManager extends React.Component {
                   }
                 `}
                 </style>
-                <Tabs
-                  className="creativeTab"
-                  activeKey={this.state.isDesignCode}
-                >
-                  <TabPane tab="Tab1" key="1">
+                
                     <Spin
                       spinning={this.state.loading}
                       wrapperClassName="spin-container"
@@ -325,44 +240,10 @@ export class CreativeManager extends React.Component {
                         onEnterEditCreative={this.onEnterEditCreative}
                       />
                     </Spin>
-                  </TabPane>
-                  <TabPane tab="Tab2" key="2">
-                    <div style={{ padding: "0px 12px 12px 12px" }}>
-                      <Button
-                        icon="left"
-                        style={{ marginBottom: 12 }}
-                        onClick={() => this.setState({ isDesignCode: "1" })}
-                      >
-                        Back
-                      </Button>
-
-                      <div style={{ fontWeight: "bold", marginBottom: 12 }}>
-                        Attach Offer Code Bank
-                      </div>
-                      <OfferList
-                        onUpdateOffer={this.props.onUpdateOffer}
-                        activeCreative={this.state.activeCreative}
-                      />
-                    </div>
-                  </TabPane>
-                </Tabs>
+                  
               </div>
             </div>
-          </TabPane>
-          <TabPane tab="Create New Creative" key="2">
-            <CreativeBuilder />
-          </TabPane>
-          <TabPane
-            tab={this.state.editingCreative ? "Edit Creative" : ""}
-            key="3"
-          >
-            <CreativeBuilder
-              creative={this.state.editingCreative}
-              isEditing
-              onEnterEditCreative={this.onEnterEditCreative}
-            />
-          </TabPane>
-        </Tabs>
+         
       </div>
     );
   }

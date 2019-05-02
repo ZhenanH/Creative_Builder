@@ -15,7 +15,7 @@ const StrategySet = (
         backgroundColor: "#fafafa"
       }}
     >
-      Strategy Set
+      Flight Package
     </div>
     <Steppers />
   </div>

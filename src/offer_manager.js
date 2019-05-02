@@ -90,39 +90,26 @@ export class OfferManager extends React.Component {
                   </span>
                 </div>
               )}
-              <Tabs
-                className={"invisibleTabs"}
-                activeKey={this.state.activeKey}
-                onChange={key => {
-                  this.setState({ activeKey: key });
-                }}
-              >
+              
                 {this.props.selectedItems.map(item => {
                   if (item.offerCodeType === "DYNAMIC") {
                     return (
-                      <TabPane tab={item.id} key={item.id}>
-                        <Tabs defaultActiveKey="1">
-                          <TabPane tab="Saved Offer Code Bank" key="1">
+                     
                             <OfferList
                               onUpdateOffer={this.props.onUpdateOffer}
                               activeCreative={item}
                             />
-                          </TabPane>
-                          <TabPane tab="Create New Offer Code Bank" key="2">
-                            Strategy builder
-                          </TabPane>
-                        </Tabs>
-                      </TabPane>
+                         
                     );
                   } else {
                     return (
-                      <TabPane tab={item.id} key={item.id}>
+                      <div>
                         You are all set
-                      </TabPane>
+                      </div>
                     );
                   }
                 })}
-              </Tabs>
+              
             </div>
           </div>
         )}

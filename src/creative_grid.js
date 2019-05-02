@@ -1,6 +1,6 @@
 import React from "react";
 import { CreativeCard } from "./creative_card";
-import { Input, Table, Icon, Pagination, Select, Row, Col } from "antd";
+import { Input, Table, Icon, Pagination, Select, Row, Col, Button } from "antd";
 
 const Search = Input.Search;
 const Option = Select.Option;
@@ -173,7 +173,7 @@ export class CreativeGrid extends React.Component {
       };
     });
 
-    const maxSelection = 3;
+    const maxSelection = 1;
 
     const onLayoutChange = layout => {
       this.setState({ layout: layout });
@@ -202,7 +202,7 @@ export class CreativeGrid extends React.Component {
     };
 
     return (
-      <div style={{ margin: "12px 12px 12px 12px" }}>
+      <div>
         <div
           style={{
             display: "flex",
@@ -211,9 +211,7 @@ export class CreativeGrid extends React.Component {
             marginBottom: 15
           }}
         >
-          <div style={{ fontWeight: "bold", marginLeft: 12 }}>
-            {"Select up to " + maxSelection + " creatives"}
-          </div>
+          
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 12 }}
@@ -245,43 +243,44 @@ export class CreativeGrid extends React.Component {
             style={{ alignItems: "center", flex: 1 }}
             gutter={16}
           >
-            <Col span={8}>
+            <Col span={12}>
               <Search
                 placeholder="Search for creatives by name"
                 onSearch={value => console.log(value)}
               />
             </Col>
-            <Col span={8}>
+            <Col span={12}>
               <Select
                 placeholder={
                   <span>
-                    <Icon type="filter" /> Select product type
+                    Sort by product type
                   </span>
                 }
                 // value={this.state.productType}
                 style={{ width: "100%" }}
                 onChange={this.handleProductChange}
               >
-                <Option value={2}>Postcard</Option>
-                <Option value={4}>4 panel catalog</Option>
-                <Option value={8}>8 panel catalog</Option>
+                <Option value={2}>Sort by finish type</Option>
+                <Option value={4}>Sort by size</Option>
+                <Option value={8}>Sort by panels</Option>
+                <Option value={8}>Sort by offer code type</Option>
+                <Option value={9}>Sort by expiration date</Option>
+                <Option value={10}>Sort by status</Option>
               </Select>
             </Col>
-            <Col span={8}>
-              <Select
-                placeholder={
-                  <span>
-                    <Icon type="filter" /> Select orientation
-                  </span>
-                }
-                style={{ width: "100%" }}
-                onChange={this.handleChange}
-              >
-                <Option value="Protrait">Protrait</Option>
-                <Option value="Landscape">Landscape</Option>
-              </Select>
-            </Col>
+            
           </Row>
+
+          <div style={{ textAlign: "right" }}>
+            <div style={{ display: "flex", marginLeft: 12 }}>
+              <Button
+                icon="sort-ascending"
+                
+                
+              ></Button>
+             
+            </div>
+          </div>
         </div>
         {this.state.layout === "list" && (
           <Table
